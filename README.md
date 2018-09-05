@@ -20,7 +20,7 @@ Recommended setup is,\
 [GIT(2.5.0.1+)](https://git-scm.com/download)\
 [Rake(10.4.2+)](https://rubygems.org/gems/rake)\
 [glu(8.3.0)](https://rubygems.org/gems/glu/versions/8.2.2)\
-[opengl(0.10.0)](https://rubygems.org/gems/opengl/versions/0.9.2)\
+[opengl(0.10.0)](https://rubygems.org/gems/opengl/versions/0.9.2)
 
 # How to build rbSFML by your own.
 Incase you want to build the library by your own, here is some instructions.
