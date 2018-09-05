@@ -46,7 +46,7 @@ Git Download Link is above description.
 After installing it, open a command shell, and type these :
 >gem install rake\
 >gem install glu\
->gem install opengl\
+>gem install opengl
 
 5. Fetch rbSFML, build, install
 After downloading rbSFML, you could follow the instuctions of the main page(https://github.com/Groogy/rbSFML).
