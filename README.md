@@ -14,19 +14,19 @@ But since it's a quite tricky library to build, and time-consuming job, I posted
 # Dependencies
 
 Recommended setup is,
-SFML : https://github.com/SFML/SFML
-rbSFML(sfml:2.3.2) : https://github.com/Groogy/rbSFML
-Ruby : http://www.ruby-lang.org/en/downloads/
-GIT(2.5.0.1+) : https://git-scm.com/download
-Rake(10.4.2+) : https://rubygems.org/gems/rake
-glu(8.3.0) : https://rubygems.org/gems/glu/versions/8.2.2
-opengl(0.10.0) : https://rubygems.org/gems/opengl/versions/0.9.2
+[SFML](https://github.com/SFML/SFML)
+[rbSFML(sfml:2.3.2)](https://github.com/Groogy/rbSFML)
+[Ruby](http://www.ruby-lang.org/en/downloads/)
+[GIT(2.5.0.1+)](https://git-scm.com/download)
+[Rake(10.4.2+)](https://rubygems.org/gems/rake)
+[glu(8.3.0)](https://rubygems.org/gems/glu/versions/8.2.2)
+[opengl(0.10.0)](https://rubygems.org/gems/opengl/versions/0.9.2)
 
 # How to build rbSFML by your own.
 Incase you want to build the library by your own, here is some instructions.
 
 If you already have a build of sfml, you could just skip to number 3.
-<Warning! : Used mingw32-gcc-MSYS build, based on windows only!>
+Warning! : Used mingw32-gcc-MSYS build, based on windows only!
 1. Install Cmake.
 Cmake download site : https://cmake.org/download/
 'rbSFML' is kind of a wrapper library, that doesn't has the basic function.
@@ -39,13 +39,15 @@ Since 'rbSFML' is updated until 2.3.2 of sfml, it's recommended to use 2.3.2.
 If you don't know how to use cmake to build things, you should find it out by yourself.
 
 3. Install Git 
-<Git Download Link is above>
 Recommended to use option cmd prompt command + git prompt command.
+Git Download Link is above description.
 
 4. Install Ruby
 After installing it, open a command shell, and type these :
 >gem install rake 
+
 >gem install glu
+
 >gem install opengl
 
 5. Fetch rbSFML, build, install
