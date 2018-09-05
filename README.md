@@ -13,14 +13,14 @@ But since it's a quite tricky library to build, and time-consuming job, I posted
 
 # Dependencies
 
-Recommended setup is,
+Recommended setup is,\n
 [SFML](https://github.com/SFML/SFML)\
-[rbSFML(sfml:2.3.2)](https://github.com/Groogy/rbSFML)
-[Ruby](http://www.ruby-lang.org/en/downloads/)
-[GIT(2.5.0.1+)](https://git-scm.com/download)
-[Rake(10.4.2+)](https://rubygems.org/gems/rake)
-[glu(8.3.0)](https://rubygems.org/gems/glu/versions/8.2.2)
-[opengl(0.10.0)](https://rubygems.org/gems/opengl/versions/0.9.2)
+[rbSFML(sfml:2.3.2)](https://github.com/Groogy/rbSFML)\n
+[Ruby](http://www.ruby-lang.org/en/downloads/)\n
+[GIT(2.5.0.1+)](https://git-scm.com/download)\n
+[Rake(10.4.2+)](https://rubygems.org/gems/rake)\n
+[glu(8.3.0)](https://rubygems.org/gems/glu/versions/8.2.2)\n
+[opengl(0.10.0)](https://rubygems.org/gems/opengl/versions/0.9.2)\n
 
 # How to build rbSFML by your own.
 Incase you want to build the library by your own, here is some instructions.
