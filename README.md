@@ -1,5 +1,6 @@
 # RubyCraft
-A Copy Of Minecraft... But not in c, c++, java, but in ruby!
+A Copy Of Minecraft... But not in c, c++, java, but in ruby! 
+IDE by Aptana Studio.
 
 The files won't execute properly if there is no ruby interpreter or no gitbash installed.
 When you try to execute, please check out the 'gemlist.txt' and see if there is anything missing from your computer.
