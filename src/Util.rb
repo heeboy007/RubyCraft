@@ -2,6 +2,7 @@ require "sfml/rbsfml"
 require "singleton"
 require "time"
 
+#hmm... bit obvious, for FPS calculating.
 class FPS
   include Singleton
   
@@ -23,6 +24,7 @@ class FPS
   
 end
 
+#for making log.
 module Debug_output
   @@debug = true
   
@@ -39,12 +41,14 @@ module Debug_output
   
 end
 
+#for radian -> degrees
 class Numeric
   def degrees
     self * Math::PI / 180 
   end
 end
 
+#for 2D object display.
 class UIobject #data struct
   attr_reader :drawobj
   attr_accessor :enabled
@@ -60,6 +64,7 @@ class UIobject #data struct
   
 end
 
+#for some command inputs.
 module Ascii_Code
   
   BACKSPACE = 8
