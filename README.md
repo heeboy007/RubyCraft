@@ -15,7 +15,7 @@ But since it's a quite tricky library to build, and time-consuming job, I posted
 
 Recommended setup is,\
 [SFML](https://github.com/SFML/SFML)\
-[rbSFML(sfml:2.3.2)](https://github.com/Groogy/rbSFML)\
+[rbSFML(SFML 2.3.2)](https://github.com/Groogy/rbSFML)\
 [Ruby](http://www.ruby-lang.org/en/downloads/)\
 [GIT(2.5.0.1+)](https://git-scm.com/download)\
 [Rake(10.4.2+)](https://rubygems.org/gems/rake)\
