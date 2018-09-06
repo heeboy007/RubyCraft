@@ -6,7 +6,7 @@ The files won't execute properly if there is no ruby interpreter or no gitbash i
 When you try to execute, please check out the 'gemlist.txt' and see if there is anything missing from your computer.
 The core gem of this program is glu,opengl.
 
-Very important library for this game, called 'rbSFML' is used for this version.
+Very important library for this game, called 'rbSFML' is used for this version.(It's not a gem!)
 
 It's recommended to build, install the library by your own.
 But since it's a quite tricky library to build, and time-consuming job, I posted the compiled library file.
