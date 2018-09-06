@@ -11,7 +11,7 @@ Very important library for this game, called 'rbSFML' is used for this version.
 It's recommended to build, install the library by your own.
 But since it's a quite tricky library to build, and time-consuming job, I posted the compiled library file.
 
-# Dependencies
+## Dependencies
 
 Recommended setup is,\
 [SFML](https://github.com/SFML/SFML)\
@@ -22,7 +22,7 @@ Recommended setup is,\
 [glu(8.3.0)](https://rubygems.org/gems/glu/versions/8.2.2)\
 [opengl(0.10.0)](https://rubygems.org/gems/opengl/versions/0.9.2)
 
-# How to build rbSFML by your own.
+## How to build rbSFML by your own.
 Incase you want to build the library by your own, here is some instructions.
 
 If you already have a build of sfml, you could just skip to number 3.
@@ -57,7 +57,7 @@ After downloading rbSFML, you could follow the instuctions of the main page(http
 http://www.aptana.com/
 If you want better workspace, highly recommend. Not neccecary, though.
 
-# Notice!
+## Notice!
 Current version of the game has not only lots of flaws and bugs, but also very poor performance.
 More than 3~4 blocks will lag your computer! 
 So before you execute, BE CAREFUL!!!
