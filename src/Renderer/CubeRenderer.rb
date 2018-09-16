@@ -9,27 +9,12 @@ load "Loaders\\VertexLoader.rb"
 module CubeRenderer
   
   def cube_init
-    @vertex = VertexLoader.instance.cube
+    #@vertex = VertexLoader.instance.cube
     texvec = VertexLoader.instance.texture
     @vbo = glGenBuffers(1)#for not crashing.
     @texv = glGenBuffers(1)#we will use same texture every side.
     glBindBuffer(GL_ARRAY_BUFFER, @texv[0])
     glBufferData(GL_ARRAY_BUFFER, texvec.size, texvec, GL_STATIC_DRAW)
-  end
-  
-  def return_vertex_with_cord x, y, z
-    generated_vertex = Array.new #generating 6 for each side.
-    cloned_vertex = Array.new
-    @vertex.each { |node| cloned_vertex << node.dup }
-    cloned_vertex.each_with_index do |vtx, idx_vertex|
-      vtx.each_with_index do |cord, idx_of_side_vtx|
-        vtx[idx_of_side_vtx] = cord + x.to_f if idx_of_side_vtx % 3 == 0
-        vtx[idx_of_side_vtx] = cord + y.to_f if idx_of_side_vtx % 3 == 1
-        vtx[idx_of_side_vtx] = cord + z.to_f if idx_of_side_vtx % 3 == 2
-      end
-      generated_vertex << vtx.pack("f*")
-    end
-    return generated_vertex
   end
   
   def assign_with_given_vertex packed_vertex
@@ -40,7 +25,8 @@ module CubeRenderer
     end
   end
   
-  def drawcube p_side, p_texture
+  def drawcube p_vertex, p_side, p_texture
+    assign_with_given_vertex p_vertex
     p_side.each_with_index do |draw,idx|
       if draw
         #GL can handle 5 array's at once.

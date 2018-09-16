@@ -1,5 +1,9 @@
+load "Loaders\\VertexLoader.rb"
 
 class Block
+  attr_accessor :x
+  attr_accessor :y
+  attr_accessor :z
   attr_accessor :id
   attr_accessor :vertex_information
   
@@ -11,7 +15,7 @@ class Block
   def initialize id, x, y, z
     @id = id
     @x, @y, @z = x, y, z
-    @vertex_information = nil
+    @vertex_information = VertexLoader.instance.return_vertex_with_cord(@x, @y, @z)
   end
   
   def is_vertex_cord_initalized?

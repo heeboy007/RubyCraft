@@ -39,7 +39,7 @@ module GLManager #this thing NEEDS to be module!
     glLoadIdentity
     
     gluPerspective(60, @width / @height, 0.1, 100.0)
-    
+     
     glMatrixMode GL_MODELVIEW
     glLoadIdentity
     

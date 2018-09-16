@@ -1,3 +1,4 @@
+#load "Loaders\\MapLoader.rb"
 
 module Command
   
@@ -10,8 +11,24 @@ module Command
       tele(cmdarr)
     when "rotate"
       rotate(cmdarr)
+    when "place_block"
+      place_block(cmdarr)
     else
       puts "There is no such command : #{cmd.to_s}"
+    end
+  end
+  
+  def place_block argu
+    if argu.count == 3 #needs cordinates.
+      begin
+        #MapLoader.instance.add_render_obj Block.new(Block::BlockID::Gravel, argu[0].to_f, argu[1].to_f, argu[2].to_f)
+        #MapLoader.instance.add_render_obj Block.new(Block::BlockID::Gravel, 1.0, 1.0, 1.0)
+      rescue
+        puts "Arguments of the command is not vaild or somewhat error had occured."
+        puts "Given array is : " + argu.to_s
+      end
+    else
+      puts "Usage : >tele [x] [y] [z]"
     end
   end
   
@@ -23,6 +40,7 @@ module Command
         puts "Teleported player to #{argu[0].to_f}, #{argu[1].to_f}, #{argu[2].to_f}"
       rescue
         puts "Arguments of the command is not vaild!"
+        puts "Given array is : " + argu.to_s
       end
     else
       puts "Usage : >tele [x] [y] [z]"
@@ -38,12 +56,13 @@ module Command
         when "y"
           @player.ForceRotate(false, argu[1].to_f)
         else
-          puts "First argument of the command must be x or y."
+          puts "First argument of the command must be x, y or reset."
           return
         end
         self.reload_camera
       rescue
         puts "The second argument of the command is not a vaild number"
+        puts "Given array is : " + argu.to_s
       end
     elsif argu.count == 1
       case argu[0]
