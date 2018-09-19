@@ -1,0 +1,5 @@
+depth_bits=24
+stencil_bits=8
+antialiasing_level=4
+gl_major_ver=3
+gl_minor_ver=3
