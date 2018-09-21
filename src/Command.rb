@@ -1,4 +1,5 @@
-#load "Loaders\\MapLoader.rb"
+require_relative 'Chunk\\MapManager.rb'
+require_relative 'Player.rb'
 
 module Command
   
@@ -13,6 +14,8 @@ module Command
       rotate(cmdarr)
     when "place_block"
       place_block(cmdarr)
+    when "destroy_block"
+      destroy_block(cmdarr)
     else
       puts "There is no such command : #{cmd.to_s}"
     end
@@ -21,8 +24,20 @@ module Command
   def place_block argu
     if argu.count == 3 #needs cordinates.
       begin
-        #MapLoader.instance.add_render_obj Block.new(Block::BlockID::Gravel, argu[0].to_f, argu[1].to_f, argu[2].to_f)
-        #MapLoader.instance.add_render_obj Block.new(Block::BlockID::Gravel, 1.0, 1.0, 1.0)
+        #MapLoader.instance.add_render_block argu[0].to_f, argu[1].to_f, argu[2].to_f
+      rescue
+        puts "Arguments of the command is not vaild or somewhat error had occured."
+        puts "Given array is : " + argu.to_s
+      end
+    else
+      puts "Usage : >tele [x] [y] [z]"
+    end
+  end
+  
+  def destroy_block argu
+    if argu.count == 3 #needs cordinates.
+      begin
+        #MapLoader.instance.delete_render_block argu[0].to_f, argu[1].to_f, argu[2].to_f
       rescue
         puts "Arguments of the command is not vaild or somewhat error had occured."
         puts "Given array is : " + argu.to_s
@@ -35,7 +50,7 @@ module Command
   def tele argu
     if argu.count == 3 #needs cordinates.
       begin
-        @player.Resetby argu[0].to_f, argu[1].to_f, argu[2].to_f
+        Player.instance.Resetby argu[0].to_f, argu[1].to_f, argu[2].to_f
         self.reload_camera(2, argu[0].to_f, argu[1].to_f, argu[2].to_f)
         puts "Teleported player to #{argu[0].to_f}, #{argu[1].to_f}, #{argu[2].to_f}"
       rescue
@@ -52,9 +67,9 @@ module Command
       begin
         case argu [0]
         when "x"
-          @player.ForceRotate(true, argu[1].to_f)
+          Player.instance.ForceRotate(true, argu[1].to_f)
         when "y"
-          @player.ForceRotate(false, argu[1].to_f)
+          Player.instance.ForceRotate(false, argu[1].to_f)
         else
           puts "First argument of the command must be x, y or reset."
           return
@@ -67,8 +82,8 @@ module Command
     elsif argu.count == 1
       case argu[0]
       when "reset"
-        @player.ForceRotate(true, 0)
-        @player.ForceRotate(false, 0)
+        Player.instance.ForceRotate(true, 0)
+        Player.instance.ForceRotate(false, 0)
       else
         puts "Usage : >rotate 'x/y/reset' [spin]"
       end

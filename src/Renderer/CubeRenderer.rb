@@ -4,7 +4,7 @@ require "glu"
 include Gl
 include Glu
 
-load "Loaders\\VertexLoader.rb"
+require_relative "..\\Loaders\\VertexLoader.rb"
 
 module CubeRenderer
   
@@ -27,13 +27,12 @@ module CubeRenderer
   
   def drawcube p_vertex, p_side, p_texture
     assign_with_given_vertex p_vertex
+    #GL can handle 5 array's at once.
+    #Enabling 2 for vertex, texture.
+    glEnableVertexAttribArray(0)
+    glEnableVertexAttribArray(1)
     p_side.each_with_index do |draw,idx|
       if draw
-        #GL can handle 5 array's at once.
-        #Enabling 2 for vertex, texture.
-        glEnableVertexAttribArray(0)
-        glEnableVertexAttribArray(1)
-        
         #bind the buffer that we currently have.(vertex)
         #Use the selected buffer to vertex drawings.
         #(0 = arraynumber, 3 = elements in array, GL_FLOAT = for float format, GL_FALSE = not normalized, 0, 0)
@@ -53,12 +52,11 @@ module CubeRenderer
         glDrawArrays(GL_QUADS, 0, 4)
         
         glDisable(GL_TEXTURE_2D)
-        
-        #After on call, you should disable these for sfml and global gl issues.
-        glDisableVertexAttribArray(0)
-        glDisableVertexAttribArray(1)
       end
     end
+    #After on call, you should disable these for sfml and global gl issues.
+    glDisableVertexAttribArray(0)
+    glDisableVertexAttribArray(1)
     #Whatever we do, disable the buffers.
     glBindBuffer(GL_ARRAY_BUFFER, 0)
   end

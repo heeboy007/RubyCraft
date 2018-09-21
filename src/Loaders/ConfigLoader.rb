@@ -1,6 +1,8 @@
-require "sfml/rbsfml"
+require 'sfml/rbsfml'
 
 include SFML
+
+require_relative '..\\Util.rb'
 
 class ConfigLoader
   include Debug_output

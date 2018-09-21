@@ -1,3 +1,4 @@
+require_relative "..\\Util.rb"
 
 class VertexLoader
   include Debug_output

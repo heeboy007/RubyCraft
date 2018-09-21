@@ -23,21 +23,36 @@ class Player
   
   def Check
     smallnum = 0.00001
-    @speed.x= 0.0 if -smallnum < @speed.x && @speed.x < smallnum #speed regulator
-    @speed.x= -10.0 if @speed.x < -10.0 #speed limit
-    @speed.x= 10.0 if @speed.x > 10.0 #speed limit
+    speed_limit = 10.0
+    
+    #speed limit
+    @speed.x= -speed_limit if @speed.x < -speed_limit
+    @speed.x= speed_limit if @speed.x > speed_limit
+    @speed.y = -speed_limit if @speed.y < -speed_limit
+    @speed.y = speed_limit if @speed.y > speed_limit
+    @speed.z= -speed_limit if @speed.z < -speed_limit
+    @speed.z = speed_limit if @speed.z > speed_limit
+    
+    #if speed is to small, stop calculate.
+    @speed.x= 0.0 if -smallnum < @speed.x && @speed.x < smallnum
     @speed.y= 0.0 if -smallnum < @speed.y && @speed.y < smallnum
-    @speed.y = -10.0 if @speed.y < -10.0
-    @speed.y = 10.0 if @speed.y > 10.0
     @speed.z= 0.0 if -smallnum < @speed.z && @speed.z < smallnum
-    @speed.z= -10.0 if @speed.z < -10.0
-    @speed.z = 10.0 if @speed.z > 10.0
-    @xspin = 0.0 if -smallnum < @xspin && @xspin < smallnum #speed regulator
+    @xspin = 0.0 if -smallnum < @xspin && @xspin < smallnum
     @yspin = 0.0 if -smallnum < @yspin && @yspin < smallnum
+    
+    #spinings..
     @theta = 360 + @theta if @theta < 0
     @theta %= 360 if @theta >= 360
     @phi = 360 + @phi if @phi < 0
     @phi %= 360 if @phi >= 360
+    
+    #prevent spinning.
+    if 90.0 <= @theta && @theta <= 270.0
+      @theta = 90.0 if @theta <= 180.0
+      @theta = 270.0 if @theta > 180.0
+      @xspin = 0.0
+    end 
+    
   end
   
   def ReturnInfo
@@ -49,7 +64,7 @@ class Player
   end
   
   def Update
-    @speed *= 0.70
+    @speed *= 0.65
     @xspin *= 0.70
     @yspin *= 0.70
     @pos += @speed
@@ -82,13 +97,15 @@ class Player
     @xspin += y * 0.02
   end
   
-  def MoveCam key
+  def MoveCam keys
+    
+=begin
     realKey = (key+97).chr.to_s if key != 38 || key != 57
     realKey = "shift" if key == 38
     realKey = "space" if key == 57
-    vec = Vector3.new 0.0, 0.0, 0.0
     case realKey
       when "w", "a", "s", "d"
+        vec = Vector3.new 0.0, 0.0, 0.0
         spd = 0.3
         sectheta = @phi if realKey == "w"
         sectheta = (@phi + 270) % 360 if realKey == "a"
@@ -97,11 +114,41 @@ class Player
         vec.z= (-cos(sectheta.degrees) * spd)
         vec.x= (sin(sectheta.degrees) * spd)
         @speed += vec #add the speed to the actual player
-    when "shift"
-      @speed.y= @speed.y - 0.25
-    when "space"
-      @speed.y= @speed.y + 0.25
+      when "shift"
+        @speed.y= @speed.y + 0.25
+      when "space"
+        @speed.y= @speed.y + 0.25
     end
+=end    
+    
+    if keys[0] || keys[1] || keys[2] || keys[3] #W, A, S, D
+      vec = Vector3.new 0.0, 0.0, 0.0
+      added_speed_multiplier = 0.05
+      if keys[0]
+        vec.z= (-cos(@phi.degrees) * added_speed_multiplier)
+        vec.x= (sin(@phi.degrees) * added_speed_multiplier)
+      end
+      if keys[1]
+        vec.z= (-cos((@phi + 270).degrees) * added_speed_multiplier)
+        vec.x= (sin((@phi + 270).degrees) * added_speed_multiplier)
+      end
+      if keys[2]
+        vec.z= (-cos((@phi + 180).degrees) * added_speed_multiplier)
+        vec.x= (sin((@phi + 180).degrees) * added_speed_multiplier)
+      end
+      if keys[3]
+        vec.z= (-cos((@phi + 90).degrees) * added_speed_multiplier)
+        vec.x= (sin((@phi + 90).degrees) * added_speed_multiplier)
+      end
+      @speed += vec #add the speed to the actual player
+    end
+    if keys[4] #LShift
+      @speed.y= @speed.y - 0.08
+    end
+    if keys[5] #Space
+      @speed.y= @speed.y + 0.08
+    end
+    
   end
   
   def ForceRotate isx, spin

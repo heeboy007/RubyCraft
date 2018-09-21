@@ -3,7 +3,7 @@ require "singleton"
 
 include SFML
 
-load "Loaders\\TextureLoader.rb"
+require_relative "TextureLoader.rb"
 
 class UILoader
   include Singleton

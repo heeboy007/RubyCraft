@@ -60,9 +60,12 @@ class UIobject #data struct
   
 end
 
+#module 
+
 module Ascii_Code
   
   BACKSPACE = 8
   ESCAPE = 13
+  GREATER = 62
   
 end

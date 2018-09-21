@@ -2,12 +2,12 @@ require "sfml/rbsfml"
 
 include SFML
 
-load "Util.rb"
-load "GLCore.rb"
-load "Player.rb"
-load "Loaders\\UILoader.rb"
-load "Loaders\\ConfigLoader.rb"
-load "Command.rb"
+require_relative "Command.rb"
+require_relative "Util.rb"
+require_relative "GLCore.rb"
+require_relative "Player.rb"
+require_relative "Loaders\\UILoader.rb"
+require_relative "Loaders\\ConfigLoader.rb"
 
 class SuperWindow < RenderWindow
   include GLManager
@@ -23,7 +23,7 @@ class SuperWindow < RenderWindow
     
     self.ui_init
     
-    super((VideoMode.new @width, @height, 32), "ver basic.3", Style::Default, ConfigLoader.instance.config)
+    super((VideoMode.new @width, @height, 32), "ver 0.41.3", Style::Default, ConfigLoader.instance.config)
     #self.vertical_sync_enabled= true
     self.framerate_limit= 60
     self.gl_init @player
@@ -97,6 +97,13 @@ class SuperWindow < RenderWindow
     d_puts "SuperWindow : sfml_reshape : SFML fuction Resized."
   end
   
+  def move_player
+    map = [Keyboard.key_pressed?(Keyboard::W),Keyboard.key_pressed?(Keyboard::A),
+      Keyboard.key_pressed?(Keyboard::S),Keyboard.key_pressed?(Keyboard::D),
+      Keyboard.key_pressed?(Keyboard::LShift),Keyboard.key_pressed?(Keyboard::Space)]
+    @player.MoveCam map
+  end
+  
   def handle_event
     while event = poll_event
       case event.type
@@ -107,6 +114,7 @@ class SuperWindow < RenderWindow
         self.gl_reshape @width, @height
         self.sfml_reshape
       when Event::TextEntered
+        inverse_command_state() if event.unicode == Ascii_Code::GREATER
         if @is_player_commanding
           #append the entered char at the end of the string if the char is not backspace.
           @commandstr += event.unicode.chr if event.unicode != Ascii_Code::BACKSPACE
@@ -124,19 +132,14 @@ class SuperWindow < RenderWindow
           case event.code
           when Keyboard::F1 #if F1 is pressed, make all ui invisible.
             @has_ui_globaly_disabled = !@has_ui_globaly_disabled
-          when Keyboard::W, Keyboard::A, Keyboard::S, Keyboard::D, Keyboard::LShift, Keyboard::Space #move player
-            @player.MoveCam event.code
           when Keyboard::Up, Keyboard::Left, Keyboard::Down, Keyboard::Right #rotate camera
             @player.RotateCamByKey event.code
           when Keyboard::Escape #exit
             @is_program_running = false
-          when Keyboard::Period
-            inverse_command_state() if @prevkey == Keyboard::RShift
           end
         else #when commanding. 
           inverse_command_state() if event.code == Keyboard::Escape
         end #if !@is_player_commanding
-        @prevkey = event.code
       when Event::GainedFocus
         @is_window_being_focused = true
       when Event::LostFocus
@@ -147,6 +150,7 @@ class SuperWindow < RenderWindow
         @player.RotateCamByMouse(event.x-@width/2, event.y-@height/2) if !@is_player_commanding && @is_window_being_focused
       end #case event.type
     end #while event = poll_event
+    move_player if @is_window_being_focused && !@is_player_commanding
   end
   
   def inverse_command_state #on each call, turns the state of commanding.
@@ -184,9 +188,11 @@ class SuperWindow < RenderWindow
       #According to sfml main forum, if I use over 2.0+ opengl,
       #I have to handle the newer gl states for my own, because SFML doesn't know it.
       
-      @uiobjects.each_with_index do |obj, index|
-        obj.update
-        draw obj.drawobj if obj.enabled && !@has_ui_globaly_disabled
+      if !@has_ui_globaly_disabled
+        @uiobjects.each_with_index do |obj, index|
+          obj.update
+          draw obj.drawobj if obj.enabled 
+        end
       end
       
       self.pop_gl_states #sfml function : pop gl state from a stack so it would be displayed.

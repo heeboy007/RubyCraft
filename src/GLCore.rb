@@ -4,11 +4,12 @@ require "glu"
 include Gl
 include Glu
 
-#load "Util.rb"
-#load "Loaders\\VertexLoader.rb"
-load "Loaders\\TextureLoader.rb"
-#load "Renderer\\CubeRenderer.rb"
-load "Renderer\\MapRenderer.rb"
+#require_relative "Util.rb"
+#require_relative "Loaders\\VertexLoader.rb"
+require_relative "Loaders\\TextureLoader.rb"
+#require_relative "Renderer\\CubeRenderer.rb"
+require_relative "Renderer\\MapRenderer.rb"
+require_relative "Chunk\\MapManager.rb"
 
 module GLManager #this thing NEEDS to be module!
   include Debug_output
@@ -60,7 +61,7 @@ module GLManager #this thing NEEDS to be module!
     
     un_bind_buffer
     
-    @map_renderer = MapRenderer.new texture
+    @map_manager = MapManager.new texture
     un_bind_buffer
   end
   
@@ -84,7 +85,7 @@ module GLManager #this thing NEEDS to be module!
     glEnableClientState(GL_VERTEX_ARRAY)
     glEnableClientState(GL_TEXTURE_COORD_ARRAY)
     
-    @map_renderer.render_map
+    @map_manager.draw_map
     
     glDisableClientState(GL_VERTEX_ARRAY)
     glDisableClientState(GL_TEXTURE_COORD_ARRAY)
@@ -135,7 +136,7 @@ module GLManager #this thing NEEDS to be module!
   end
   
   def clean_buffers
-    @map_renderer.delete_texture_buffers
+    @map_manager.delete_texture_buffers
   end
   
 end
