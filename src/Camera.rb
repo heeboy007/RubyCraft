@@ -99,28 +99,6 @@ class Camera
   
   def MoveCam keys
     
-=begin
-    realKey = (key+97).chr.to_s if key != 38 || key != 57
-    realKey = "shift" if key == 38
-    realKey = "space" if key == 57
-    case realKey
-      when "w", "a", "s", "d"
-        vec = Vector3.new 0.0, 0.0, 0.0
-        spd = 0.3
-        sectheta = @phi if realKey == "w"
-        sectheta = (@phi + 270) % 360 if realKey == "a"
-        sectheta = (@phi + 180) % 360 if realKey == "s"
-        sectheta = (@phi + 90) % 360 if realKey == "d"
-        vec.z= (-cos(sectheta.degrees) * spd)
-        vec.x= (sin(sectheta.degrees) * spd)
-        @speed += vec #add the speed to the actual player
-      when "shift"
-        @speed.y= @speed.y + 0.25
-      when "space"
-        @speed.y= @speed.y + 0.25
-    end
-=end    
-    
     if keys[0] || keys[1] || keys[2] || keys[3] #W, A, S, D
       vec = Vector3.new 0.0, 0.0, 0.0
       added_speed_multiplier = 0.05
