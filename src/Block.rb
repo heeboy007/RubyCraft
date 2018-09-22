@@ -6,7 +6,7 @@ class Block
   #attr_accessor :Z
   attr_accessor :facing_update
   attr_accessor :facing_information
-  attr_accessor :id
+  attr_reader :Id
   attr_accessor :vertex_information
   #attr_accessor :Chunk_handler
   
@@ -16,18 +16,23 @@ class Block
   end
   
   def initialize id, x, y, z, chunk_handler
-    chunk_handler.add_block_at(x, y, z, self)
-    @id = id
+    #chunk_handler.add_block_at(x, y, z, self)
+    @Id = id
     @Chunk_handler = chunk_handler
     @X, @Y, @Z = x, y, z
     @facing_update = true
-    @facing_information = chunk_handler.get_block_adj(x, y, z)
+    @facing_information = chunk_handler.update_blocks_fetch_facing(x, y, z, true)
     @vertex_information = VertexLoader.instance.return_vertex_with_cord(x, y, z)
   end
   
-  def update fracing_index
+  def update_facing fracing_index, is_placing
+    #infinite loop.
     #@facing_information = @Chunk_handler.get_block_adj(@X, @Y, @Z)
-    @facing_information[fracing_index] = false
+    @facing_information[fracing_index] = !is_placing
+  end
+  
+  #no use right now.
+  def update_vertex
     @vertex_information = VertexLoader.instance.return_vertex_with_cord(@X, @Y, @Z)
   end
   

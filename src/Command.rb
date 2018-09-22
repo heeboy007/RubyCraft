@@ -1,5 +1,5 @@
-require_relative 'Chunk\\MapManager.rb'
-require_relative 'Player.rb'
+require_relative 'World\\MapManager.rb'
+require_relative 'Camera.rb'
 
 module Command
   
@@ -24,7 +24,7 @@ module Command
   def place_block argu
     if argu.count == 3 #needs cordinates.
       begin
-        #MapLoader.instance.add_render_block argu[0].to_f, argu[1].to_f, argu[2].to_f
+        MapManager.instance.add_block_at argu[0].to_f, argu[1].to_f, argu[2].to_f
       rescue
         puts "Arguments of the command is not vaild or somewhat error had occured."
         puts "Given array is : " + argu.to_s
@@ -37,7 +37,7 @@ module Command
   def destroy_block argu
     if argu.count == 3 #needs cordinates.
       begin
-        #MapLoader.instance.delete_render_block argu[0].to_f, argu[1].to_f, argu[2].to_f
+        MapManager.instance.destroy_block_at argu[0].to_f, argu[1].to_f, argu[2].to_f
       rescue
         puts "Arguments of the command is not vaild or somewhat error had occured."
         puts "Given array is : " + argu.to_s
@@ -50,7 +50,7 @@ module Command
   def tele argu
     if argu.count == 3 #needs cordinates.
       begin
-        Player.instance.Resetby argu[0].to_f, argu[1].to_f, argu[2].to_f
+        Camera.instance.Resetby argu[0].to_f, argu[1].to_f, argu[2].to_f
         self.reload_camera(2, argu[0].to_f, argu[1].to_f, argu[2].to_f)
         puts "Teleported player to #{argu[0].to_f}, #{argu[1].to_f}, #{argu[2].to_f}"
       rescue
@@ -67,9 +67,9 @@ module Command
       begin
         case argu [0]
         when "x"
-          Player.instance.ForceRotate(true, argu[1].to_f)
+          Camera.instance.ForceRotate(true, argu[1].to_f)
         when "y"
-          Player.instance.ForceRotate(false, argu[1].to_f)
+          Camera.instance.ForceRotate(false, argu[1].to_f)
         else
           puts "First argument of the command must be x, y or reset."
           return
@@ -82,8 +82,8 @@ module Command
     elsif argu.count == 1
       case argu[0]
       when "reset"
-        Player.instance.ForceRotate(true, 0)
-        Player.instance.ForceRotate(false, 0)
+        Camera.instance.ForceRotate(true, 0)
+        Camera.instance.ForceRotate(false, 0)
       else
         puts "Usage : >rotate 'x/y/reset' [spin]"
       end

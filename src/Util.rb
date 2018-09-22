@@ -60,12 +60,17 @@ class UIobject #data struct
   
 end
 
-#module 
+module Util
+  
+  Chunk_Size = 8
+  Pov = 60
+  
+end
 
 module Ascii_Code
   
-  BACKSPACE = 8
-  ESCAPE = 13
-  GREATER = 62
+  Backspace = 8
+  Escape = 13
+  Greater = 62
   
 end

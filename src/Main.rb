@@ -5,7 +5,7 @@ include SFML
 require_relative "Command.rb"
 require_relative "Util.rb"
 require_relative "GLCore.rb"
-require_relative "Player.rb"
+require_relative "Camera.rb"
 require_relative "Loaders\\UILoader.rb"
 require_relative "Loaders\\ConfigLoader.rb"
 
@@ -17,13 +17,13 @@ class SuperWindow < RenderWindow
   def initialize
     @width, @height = 640, 640
     @is_program_running, @has_ui_globaly_disabled, @is_player_commanding, @is_window_being_focused = true, false, false, true
-    @player, @clock = Player.instance, Clock.new
+    @player, @clock = Camera.instance, Clock.new
     @uiobjects = Array.new
     @commandstr = ""
     
     self.ui_init
     
-    super((VideoMode.new @width, @height, 32), "ver 0.41.3", Style::Default, ConfigLoader.instance.config)
+    super((VideoMode.new @width, @height, 32), "ver 0.41.5", Style::Default, ConfigLoader.instance.config)
     #self.vertical_sync_enabled= true
     self.framerate_limit= 60
     self.gl_init @player
@@ -114,15 +114,15 @@ class SuperWindow < RenderWindow
         self.gl_reshape @width, @height
         self.sfml_reshape
       when Event::TextEntered
-        inverse_command_state() if event.unicode == Ascii_Code::GREATER
+        inverse_command_state() if event.unicode == Ascii_Code::Greater
         if @is_player_commanding
           #append the entered char at the end of the string if the char is not backspace.
-          @commandstr += event.unicode.chr if event.unicode != Ascii_Code::BACKSPACE
+          @commandstr += event.unicode.chr if event.unicode != Ascii_Code::Backspace
           #if it is backspace, erase the char at the end of the char.
-          @commandstr = @commandstr[0..-2] if event.unicode == Ascii_Code::BACKSPACE
+          @commandstr = @commandstr[0..-2] if event.unicode == Ascii_Code::Backspace
           #when there's no more chars to erase, turn off the command_mode
-          inverse_command_state() if event.unicode == Ascii_Code::BACKSPACE && @commandstr.empty?
-          if event.unicode == Ascii_Code::ESCAPE
+          inverse_command_state() if event.unicode == Ascii_Code::Backspace && @commandstr.empty?
+          if event.unicode == Ascii_Code::Escape
             command(@commandstr)
             inverse_command_state()
           end

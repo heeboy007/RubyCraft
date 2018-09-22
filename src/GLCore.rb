@@ -4,12 +4,12 @@ require "glu"
 include Gl
 include Glu
 
-#require_relative "Util.rb"
+require_relative "Util.rb"
 #require_relative "Loaders\\VertexLoader.rb"
 require_relative "Loaders\\TextureLoader.rb"
 #require_relative "Renderer\\CubeRenderer.rb"
 require_relative "Renderer\\MapRenderer.rb"
-require_relative "Chunk\\MapManager.rb"
+require_relative "World\\MapManager.rb"
 
 module GLManager #this thing NEEDS to be module!
   include Debug_output
@@ -39,11 +39,12 @@ module GLManager #this thing NEEDS to be module!
     glMatrixMode GL_PROJECTION
     glLoadIdentity
     
-    gluPerspective(60, @width / @height, 0.1, 100.0)
+    gluPerspective(Util::Pov, @width / @height, 0.1, 100.0)
      
     glMatrixMode GL_MODELVIEW
     glLoadIdentity
     
+    #TODO: Move this functions to texture loader
     texture = glGenTextures(1)
     tex_data = TextureLoader.instance.get_texture("gravel")
     glBindTexture(GL_TEXTURE_2D, texture[0])
@@ -59,9 +60,8 @@ module GLManager #this thing NEEDS to be module!
     )
     glGenerateMipmap GL_TEXTURE_2D
     
-    un_bind_buffer
-    
-    @map_manager = MapManager.new texture
+    @map_manager = MapManager.instance 
+    @map_manager.map_init texture 
     un_bind_buffer
   end
   
@@ -74,7 +74,7 @@ module GLManager #this thing NEEDS to be module!
     glMatrixMode GL_PROJECTION
     glLoadIdentity
     
-    gluPerspective(60, aspect, 1.0, 100.0)
+    gluPerspective(Util::Pov, aspect, 1.0, 100.0)
     
     glMatrixMode GL_MODELVIEW  
     
