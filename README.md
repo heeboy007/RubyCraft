@@ -61,3 +61,6 @@ If you want better workspace, highly recommend. Not neccecary, though.
 Current version of the game has not only lots of flaws and bugs, but also very poor performance.
 More than 3~4 blocks will lag your computer! 
 So before you execute, BE CAREFUL!!!
+
+<table border="1">
+</table>
