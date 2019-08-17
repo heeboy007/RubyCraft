@@ -9,10 +9,6 @@ ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll
 ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --debug-extract --output Test13.exe --gem-full=opengl,glu --verbose Main.rb
 ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output Test14.exe --gem-full=opengl,glu --verbose Main.rb
 
---Beta
+--Completed Command for now. Use this command to make exe.
 
 ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.0.exe --add-all-core --gem-full=opengl,glu --verbose Main.rb
-ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.1.exe --gem-full=opengl,glu Main.rb
-ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.1.1.exe --gem-full=opengl,glu,rspec Main.rb
-ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.2.1.exe --gem-full=opengl,glu,rspec Main.rb
-ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.3.1.exe --gem-full=opengl,glu,rspec Main.rb
