@@ -1,0 +1,18 @@
+--Test
+
+ocra --dll sfml-audio-2.dll --dll OpenAL32.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll opengl32.dll --dll gdi32.dll --dll sfml-network-2.dll --dll ws2_32.dll --dll sfml-system-2.dll --dll winmm.dll --debug --debug-extract --output Test7.exe --add-all-core --gem-full=opengl,glu --verbose Main.rb
+ocra --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --debug --debug-extract --output Test8.exe --add-all-core --gem-full=opengl,glu --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --debug --debug-extract --output Test9.exe --add-all-core --gem-full=opengl,glu --gem-files Resource\* --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --debug --debug-extract --output Test10.exe --add-all-core --gem-full=opengl,glu --gem-files .\* --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --debug-extract --output Test11.exe --add-all-core --gem-full=opengl,glu --gem-files ./* --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --debug-extract --output Test12.exe --add-all-core --gem-full=opengl,glu --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --debug-extract --output Test13.exe --gem-full=opengl,glu --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output Test14.exe --gem-full=opengl,glu --verbose Main.rb
+
+--Beta
+
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.0.exe --add-all-core --gem-full=opengl,glu --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.1.exe --gem-full=opengl,glu Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.1.1.exe --gem-full=opengl,glu,rspec Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.2.1.exe --gem-full=opengl,glu,rspec Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.3.1.exe --gem-full=opengl,glu,rspec Main.rb
