@@ -58,7 +58,7 @@ If you want a .exe file, there would be a OcraCmd.txt file to make your build.
 This command is used on Git Bash at /src.
 Make sure you have the latest ocra is installed in your bash.
 
-[Install Ocra]https://github.com/larsch/ocra/
+[Install Ocra](https://github.com/larsch/ocra/)
 
 8. Install Aptana Studio(Option)
 http://www.aptana.com/
