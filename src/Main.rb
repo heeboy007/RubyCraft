@@ -2,94 +2,55 @@ require "sfml/rbsfml"
 
 include SFML
 
-require_relative "Command.rb"
-require_relative "Util.rb"
-require_relative "GLCore.rb"
-require_relative "Camera.rb"
-require_relative "Loaders\\UILoader.rb"
-require_relative "Loaders\\ConfigLoader.rb"
+require_relative "Gui/Command.rb"
+require_relative "Misc/Util.rb"
+require_relative "Renderer/GLCore.rb"
+require_relative "Renderer/Camera.rb"
+require_relative "Gui/UIBuilder.rb"
+require_relative "Misc/ConfigLoader.rb"
+require_relative "Event/EventHandler.rb"
+require_relative "Maths/RayTracer.rb"
+require_relative "World/Player.rb"
+
+$:.unshift File.dirname($0)
+if ENV["OCRA_EXECUTABLE"] != nil
+  $:.unshift File.dirname(ENV["OCRA_EXECUTABLE"])
+end
 
 class SuperWindow < RenderWindow
   include GLManager
   include Debug_output
   include Command
+  include EventHandler
   
   def initialize
-    @width, @height = 640, 640
-    @is_program_running, @has_ui_globaly_disabled, @is_player_commanding, @is_window_being_focused = true, false, false, true
-    @player, @clock = Camera.instance, Clock.new
-    @uiobjects = Array.new
+    config = ConfigLoader.instance
+    @width, @height = config.get_int("width"), config.get_int("height")
+    @is_program_running, @has_ui_globaly_disabled, @is_player_commanding, @is_window_being_focused = true, config.get_bool("ui_disabled"), false, false
+    @camera, @clock = Camera.instance, Clock.new
     @commandstr = ""
+    @ray_tracer = RayTracer.new 
+    @player = Player.new
     
     self.ui_init
     
-    super((VideoMode.new @width, @height, 32), "ver 0.41.5", Style::Default, ConfigLoader.instance.config)
-    #self.vertical_sync_enabled= true
-    self.framerate_limit= 60
-    self.gl_init @player
+    super((VideoMode.new @width, @height, 32), "RubyCraft #{config.version}", Style::Default, config.context)
+    self.vertical_sync_enabled= config.get_bool("vertical_sync_default_enabled")
+    self.framerate_limit= config.get_int("max_framerate") #it has no meaning.
+    self.gl_init @camera
     self.check_gl_version
   end
   
   def ui_init
-    ui = UILoader.instance
+    ui = UIBuilder.instance
     
-    fpsupdate = lambda do |obj| #fps update
-      clock = FPS.instance
-      if clock.query?
-        obj.string= "FPS : #{clock.fpscount}"
-        clock.reset
-      else
-        clock.increase
-      end
-    end
+    ui.ui_update_resize @width, @height
     
-    infoupdate = lambda do |obj| #keep update the playerinfo
-      obj.position= Vector2.new 0.0, 20.0
-      obj.string= @player.ReturnInfo
-    end
-    
-    aimupdate = lambda do |obj| #put the aim at the center of the screen
-      obj.position= Vector2.new(((@width-obj.texture_rect.width)/2).to_f,((@height-obj.texture_rect.height)/2).to_f)
-    end
-    
-    graphupdate = lambda do |obj|
-      obj.position= Vector2.new((@width-100).to_f, 0.0)
-    end
-    
-    graphpointupdate = lambda do |obj|
-      obj.position= Vector2.new((@width-50).to_f, 50.0)
-      obj.rotation= @player.phi + 270.0
-    end
-    
-    commandupdate = lambda do |obj|
-      obj.position= Vector2.new(5.0, @height - 23.0)
-      obj.size= Vector2.new(@width - 10.0, 18.0)
-    end
-    
-    commandlineupdate = lambda do |obj|
-      obj.position= Vector2.new(7.0, @height - 20.0)
-      obj.string= @commandstr
-    end
-    
-    add_ui_obj_to_display(ui.loadedobjs[0], "FPSCounter", fpsupdate)
-    add_ui_obj_to_display(ui.loadedobjs[1], "PlayerInfo", infoupdate)
-    add_ui_obj_to_display(ui.loadedobjs[2], "Aim", aimupdate)
-    add_ui_obj_to_display(ui.loadedobjs[3], "VectorView", graphupdate)
-    add_ui_obj_to_display(ui.loadedobjs[4], "Theta", graphpointupdate)
-    add_ui_obj_to_display(ui.loadedobjs[5], "Command", commandupdate, false)
-    add_ui_obj_to_display(ui.loadedobjs[6], "CommandLine", commandlineupdate, false)
-  end
-  
-  def add_ui_obj_to_display obj, label, callback = 0, enabled = true
-    uiobj = UIobject.new(obj, enabled, label, callback)
-    @uiobjects << uiobj
-  end
-  
-  def inverse_ui_obj_visiblity searchlabel
-    @uiobjects.each_with_index do |obj,index|
-      return obj.enabled = !obj.enabled if searchlabel == obj.label
-    end
-    return false
+    ui.build_ui_objects 
+    ui.external_ui_updater.push(@ray_tracer.get_block_info_updater)
+    ui.external_ui_updater.push(@player.get_player_info_updater)
+    ui.external_ui_updater.push(@camera.get_camera_info_updater)
+    ui.external_ui_updater.push(@camera.get_camera_graph_updater)
   end
   
   def sfml_reshape
@@ -97,89 +58,45 @@ class SuperWindow < RenderWindow
     d_puts "SuperWindow : sfml_reshape : SFML fuction Resized."
   end
   
-  def move_player
+  def move_camera
     map = [Keyboard.key_pressed?(Keyboard::W),Keyboard.key_pressed?(Keyboard::A),
       Keyboard.key_pressed?(Keyboard::S),Keyboard.key_pressed?(Keyboard::D),
       Keyboard.key_pressed?(Keyboard::LShift),Keyboard.key_pressed?(Keyboard::Space)]
-    @player.MoveCam map
-  end
-  
-  def handle_event
-    while event = poll_event
-      case event.type
-      when Event::Closed
-        @is_program_running = false
-      when Event::Resized
-        @width, @height = event.width, event.height
-        self.gl_reshape @width, @height
-        self.sfml_reshape
-      when Event::TextEntered
-        inverse_command_state() if event.unicode == Ascii_Code::Greater
-        if @is_player_commanding
-          #append the entered char at the end of the string if the char is not backspace.
-          @commandstr += event.unicode.chr if event.unicode != Ascii_Code::Backspace
-          #if it is backspace, erase the char at the end of the char.
-          @commandstr = @commandstr[0..-2] if event.unicode == Ascii_Code::Backspace
-          #when there's no more chars to erase, turn off the command_mode
-          inverse_command_state() if event.unicode == Ascii_Code::Backspace && @commandstr.empty?
-          if event.unicode == Ascii_Code::Escape
-            command(@commandstr)
-            inverse_command_state()
-          end
-        end #if @is_player_commanding
-      when Event::KeyPressed
-        if !@is_player_commanding #not useing command.
-          case event.code
-          when Keyboard::F1 #if F1 is pressed, make all ui invisible.
-            @has_ui_globaly_disabled = !@has_ui_globaly_disabled
-          when Keyboard::Up, Keyboard::Left, Keyboard::Down, Keyboard::Right #rotate camera
-            @player.RotateCamByKey event.code
-          when Keyboard::Escape #exit
-            @is_program_running = false
-          end
-        else #when commanding. 
-          inverse_command_state() if event.code == Keyboard::Escape
-        end #if !@is_player_commanding
-      when Event::GainedFocus
-        @is_window_being_focused = true
-      when Event::LostFocus
-        @is_window_being_focused = false
-      when Event::MouseButtonReleased
-        inverse_command_state() if @is_player_commanding
-      when Event::MouseMoved
-        @player.RotateCamByMouse(event.x-@width/2, event.y-@height/2) if !@is_player_commanding && @is_window_being_focused
-      end #case event.type
-    end #while event = poll_event
-    move_player if @is_window_being_focused && !@is_player_commanding
+    @camera.move_cam map
   end
   
   def inverse_command_state #on each call, turns the state of commanding.
     @commandstr = ""
     @is_player_commanding = !@is_player_commanding
-    inverse_ui_obj_visiblity("Command")
-    inverse_ui_obj_visiblity("CommandLine")
+    UIBuilder.instance.inverse_ui_obj_visiblity("Command")
+    UIBuilder.instance.inverse_ui_obj_visiblity("CommandLine")
   end
   
-  def postEndProgram
+  def post_end_program
     @is_program_running = false
   end
   
   def run
     #fpscount = 0
+    @camera.set_position_by 0.5, 3, 0.5
+    @camera.set_rotate_angle false, 180
     while @is_program_running
+      
       #fisrt, handle the events
       handle_event #event handler
-      @player.Update #calculations
+      @camera.update #calculations
       self.update_camera
       
       self.clear_window # well, self.clear will work the same way, but not on depth tests.
-      self.mouse_cursor_visible= @is_player_commanding ? true : false
+      self.mouse_cursor_visible= @is_player_commanding
       
       #not commanding, while focused, set the mouse position at the center of the window.
       if !@is_player_commanding && @is_window_being_focused
         pos = [Vector2.new((@width/2).to_i, (@height/2).to_i), self]
-        Mouse.set_position(pos) 
+        Mouse.set_position(pos)
       end
+      #needs raytrace to be done after all cordinate moves. And helpfully, return some useful display infos!
+      @ray_tracer.ray_trace(@camera.pos, @camera.pitch, @camera.yaw)
       
       self.draw_3d_objs #draw 3D stuffs.
       
@@ -189,9 +106,11 @@ class SuperWindow < RenderWindow
       #I have to handle the newer gl states for my own, because SFML doesn't know it.
       
       if !@has_ui_globaly_disabled
-        @uiobjects.each_with_index do |obj, index|
-          obj.update
-          draw obj.drawobj if obj.enabled 
+        UIBuilder.instance.loaded_ui_objcets.each do |obj|
+          if obj.enabled 
+            obj.update
+            draw obj.drawobj
+          end 
         end
       end
       
@@ -207,4 +126,6 @@ end
 
 app = SuperWindow.new
 
-app.run
+if not defined?(Ocra)
+  app.run
+end
