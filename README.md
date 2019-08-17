@@ -53,14 +53,20 @@ After downloading rbSFML, you could follow the instuctions of the main page(http
 
 6. Run! If you did setup correctly, the program will start properly.
 
-7. Install Aptana Studio(Option)
+7. Make an exe file.
+If you want a .exe file, there would be a OcraCmd.txt file to make your build.
+This command is used on Git Bash at /src.
+Make sure you have the latest ocra is installed in your bash.
+
+[Install Ocra]https://github.com/larsch/ocra/
+
+8. Install Aptana Studio(Option)
 http://www.aptana.com/
 If you want better workspace, highly recommend. Not neccecary, though.
 
 ## Notice!
-Current version of the game has not only lots of flaws and bugs, but also very poor performance.
-More than 3~4 blocks will lag your computer! 
-So before you execute, BE CAREFUL!!!
+Now build commands are in OcraCmd.txt to actually make a portable .exe file.
+No other O/S than windows are supported yet.
 
 <table border="1">
 </table>
