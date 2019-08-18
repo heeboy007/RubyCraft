@@ -1,6 +1,5 @@
 
-class UIobject #data struct
-  attr_reader :drawobj
+class DefaultUIobject #data struct
   attr_accessor :enabled
   attr_reader :label
   
@@ -8,8 +7,12 @@ class UIobject #data struct
     @drawobj, @label, @update_callback, @enabled = drawable, label, update_func, enabled
   end
   
-  def update
-    @update_callback.call @drawobj if @update_callback != nil
+  def update width, height
+    @update_callback.call @drawobj, width, height if @update_callback != nil
+  end
+  
+  def draw_on window
+    window.draw @drawobj
   end
   
 end

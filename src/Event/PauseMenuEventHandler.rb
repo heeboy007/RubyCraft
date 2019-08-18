@@ -15,7 +15,6 @@ module PauseMenuEventHandler
       
       when Event::Resized
         @width, @height = event.width, event.height
-        @ui_manager.resize_screen @width, @height
         self.gl_reshape @width, @height
         self.sfml_reshape
       

@@ -15,7 +15,8 @@ class TextureLoader
     @names = [
       ["texture_0.png","img"],
       ["aim.png","tex"],
-      ["graph.png","tex"]
+      ["graph.png","tex"],
+      ["button.png","tex"]
     ]
     @textures = Hash.new
     

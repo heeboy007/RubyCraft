@@ -10,7 +10,6 @@ module GamePlayEventHandler
     @commandstr = ""
     @is_player_commanding = !@is_player_commanding
     @ui_manager.inverse_visiblity_of("Command")
-    @ui_manager.inverse_visiblity_of("CommandLine")
   end
   
   def handle_gameplay_events
@@ -22,7 +21,6 @@ module GamePlayEventHandler
         
       when Event::Resized
         @width, @height = event.width, event.height
-        @ui_manager.resize_screen @width, @height
         self.gl_reshape @width, @height
         self.sfml_reshape
         

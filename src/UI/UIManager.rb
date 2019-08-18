@@ -8,17 +8,14 @@ class UIManager
   
   def initialize width, height
     @ui = UIBuilder.new
-    
-    @ui.ui_update_resize width, height
+  end
+  
+  def build_ui_objects
     @ui.build_ui_objects 
   end
   
   def add_ext_ui_updater updater
     @ui.external_ui_updater.push(updater)
-  end
-  
-  def resize_screen width, height
-    @ui.ui_update_resize width, height
   end
   
   def inverse_visiblity_of ui_obj_key
@@ -29,11 +26,11 @@ class UIManager
     @ui.commandstr = str
   end
   
-  def draw_ui_objects window, do_update = true
+  def draw_ui_objects window, width, height, do_update = true
     @ui.loaded_ui_objcets.each do |obj|
       if obj.enabled 
-        obj.update if do_update
-        window.draw obj.drawobj
+        obj.update width, height if do_update
+        obj.draw_on window
       end 
     end
   end

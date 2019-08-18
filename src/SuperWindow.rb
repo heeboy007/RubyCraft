@@ -8,7 +8,7 @@ require_relative "UI/UIManager.rb"
 require_relative "Misc/Util.rb"
 require_relative "Misc/ConfigLoader.rb"
 
-require_relative "Renderer/GLCore.rb"
+require_relative "Renderer/GLManager.rb"
 require_relative "Renderer/Camera.rb"
 
 require_relative "Event/GamePlayEventHandler.rb"
@@ -46,10 +46,15 @@ class SuperWindow < RenderWindow
   end
   
   def ui_init
+    commandline_updater = lambda do |obj|
+      obj.string= @commandstr
+    end
     @ui_manager.add_ext_ui_updater(@ray_tracer.get_block_info_updater)
     @ui_manager.add_ext_ui_updater(@player.get_player_info_updater)
     @ui_manager.add_ext_ui_updater(@camera.get_camera_info_updater)
     @ui_manager.add_ext_ui_updater(@camera.get_camera_graph_updater)
+    @ui_manager.add_ext_ui_updater(commandline_updater)
+    @ui_manager.build_ui_objects
   end
   
   def sfml_reshape
@@ -100,7 +105,7 @@ class SuperWindow < RenderWindow
         #I have to handle the newer gl states for my own, because SFML doesn't know it.
         
         if !@has_ui_globaly_disabled
-          @ui_manager.draw_ui_objects self
+          @ui_manager.draw_ui_objects self, @width, @height
         end
         
         self.pop_gl_states #sfml function : pop gl state from a stack so it would be displayed.
@@ -118,7 +123,7 @@ class SuperWindow < RenderWindow
         #I have to handle the newer gl states for my own, because SFML doesn't know it.
           
         if !@has_ui_globaly_disabled
-          @ui_manager.draw_ui_objects self, false
+          @ui_manager.draw_ui_objects self, @width, @height, false
         end
 
         

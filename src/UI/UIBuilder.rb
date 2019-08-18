@@ -4,7 +4,10 @@ require 'singleton'
 include SFML
 
 require_relative "../Misc/TextureLoader.rb"
-require_relative "UIObject.rb"
+require_relative "GUIObjects/DefaultUIobject.rb"
+require_relative "GUIObjects/CommandLine.rb"
+require_relative "GUIObjects/PlayerThetaDisplay.rb"
+require_relative "GUIObjects/DebugInformation.rb"
 require_relative "FPSChecker.rb"
 require_relative "../World/MapManager.rb"
 
@@ -76,10 +79,6 @@ class UIBuilder
     return obj
   end
   
-  def ui_update_resize width, height
-    @width, @height = width, height
-  end
-  
   def inverse_ui_obj_visiblity searchlabel
     @loaded_ui_objcets.each_with_index do |obj,index|
       return obj.enabled = !obj.enabled if searchlabel == obj.label
@@ -88,71 +87,21 @@ class UIBuilder
   end
   
   def build_ui_objects
-    
-    fpsupdate = lambda do |obj| #fps update
-      clock = FPS.instance
-      if clock.query?
-        obj.string= "FPS : #{clock.fpscount}"
-        clock.reset
-      else
-        clock.increase
-      end
-    end
-    
-    infoupdate = lambda do |obj| #keep update the playerinfo
-      obj.position= Vector2.new 0.0, 20.0
-      @external_ui_updater[2].call obj
-    end
-    
-    aimupdate = lambda do |obj| #put the aim at the center of the screen
-      obj.position= Vector2.new(((@width-obj.texture_rect.width)/2).to_f,((@height-obj.texture_rect.height)/2).to_f)
-    end
-    
-    graphupdate = lambda do |obj|
-      obj.position= Vector2.new((@width-100).to_f, 0.0)
-    end
-    
-    graphpointupdate = lambda do |obj|
-      obj.position= Vector2.new((@width-50).to_f, 50.0)
-      @external_ui_updater[3].call obj
-    end
-    
-    commandupdate = lambda do |obj|
-      obj.position= Vector2.new(5.0, @height - 23.0)
-      obj.size= Vector2.new(@width - 10.0, 18.0)
-    end
-    
-    commandlineupdate = lambda do |obj|
-      obj.position= Vector2.new(7.0, @height - 20.0)
-      obj.string= @commandstr
-    end
-    
-    raytracerupdate = lambda do |obj|
-      obj.position= Vector2.new(5.0, @height - 40.0)
-      @external_ui_updater[0].call obj
+    aimupdate = lambda do |obj, width, height| #put the aim at the center of the screen
+      obj.position= Vector2.new(((width-obj.texture_rect.width)/2).to_f,((height-obj.texture_rect.height)/2).to_f)
     end
     
     mapinfoupdate = lambda do |obj|
-      obj.position= Vector2.new(5.0, @height - 55.0)
       obj.string= "Loaded Chunks : #{MapManager.instance.get_the_number_of_chunks}"
     end
     
-    playerinventoryupdate = lambda do |obj|
-      obj.position= Vector2.new(5.0, @height - 70.0)
-      @external_ui_updater[1].call obj
-    end
-    
     @loaded_ui_objcets = Array.new
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[0], "FPSCounter", fpsupdate)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[1], "PlayerInfo", infoupdate)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[2], "Aim", aimupdate)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[3], "VectorView", graphupdate)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[4], "Theta", graphpointupdate)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[5], "Command", commandupdate, false)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[6], "CommandLine", commandlineupdate, false)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[7], "RayTracedBlock", raytracerupdate)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[8], "MapInfo", mapinfoupdate)
-    @loaded_ui_objcets << UIobject.new(@loaded_drawables[9], "PlayerInventory", playerinventoryupdate)
+    @loaded_ui_objcets << DebugInformation.new("Debug", 
+      @loaded_drawables[0], @loaded_drawables[1], @loaded_drawables[7], @loaded_drawables[8], @loaded_drawables[9],
+      @external_ui_updater[2], @external_ui_updater[0], mapinfoupdate, @external_ui_updater[1])
+    @loaded_ui_objcets << DefaultUIobject.new(@loaded_drawables[2], "Aim", aimupdate)
+    @loaded_ui_objcets << PlayerThetaDisplay.new("VectorView", @loaded_drawables[3], @loaded_drawables[4], @external_ui_updater[3])
+    @loaded_ui_objcets << CommandLine.new("Command", @loaded_drawables[5], @loaded_drawables[6], @external_ui_updater[4])
     return nil
   end
   

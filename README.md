@@ -26,10 +26,11 @@ Incase you want to build the library by your own, here is some instructions.
 
 If you already have a build of sfml, you could just skip to number 3.\
 Warning! : Used mingw32-gcc-MSYS build, based on windows only!
+
 1. Install Cmake.
 Cmake download site : https://cmake.org/download/
-'rbSFML' is kind of a wrapper library, that doesn't has the basic function.
-So what you would need is the sfml library, and it requires cmake to build one.
+'rbSFML' is kind of a wrapper library, that doesn't has the basic function.\
+So what you would need is the sfml library, and it requires cmake to build one.\
 (I used gui version of cmake for more accuracy.)
 
 2. Build Sfml
@@ -53,14 +54,14 @@ After downloading rbSFML, you could follow the instuctions of the main page(http
 6. Run! If you did setup correctly, the program will start properly.
 
 ## About Program itself...
-Currently, chunk loadings and loading distance methods are working.
+Currently, chunk loadings and loading distance methods are working.\
 And ray-tracing for block placement and removeal are implemented.
 
-We need a pause menu, and a initial menu.
-And frustrum culling for preformance.
+We need a pause menu, and a initial menu.\
+And frustrum culling for preformance.\
 Also we need a map generator.
 
-Although i've made this through, I'm still using the deprecated opengl methods. 
+Although i've made this through, I'm still using the deprecated opengl methods.\
 (Such as glRotatef or glTranslatef.)
 
 ### Snapshot
@@ -68,12 +69,12 @@ Although i've made this through, I'm still using the deprecated opengl methods.
 ![Flat_Generation](https://user-images.githubusercontent.com/41155496/63218860-24edc080-c1a0-11e9-850a-64d09a70af1e.PNG)
 
 ## Building Executable
-If you want a .exe file, there would be a OcraCmd.txt file to make your build.
-This command is used on Git Bash at /src.
-Make sure you have the latest ocra is installed in your bash.
+If you want a .exe file, there would be a OcraCmd.txt file to make your build.\
+This command is used on Git Bash at /src.\
+Make sure you have the latest ocra is installed in your bash.\
 No other O/S than windows are supported yet.
 
-[Install Ocra](https://github.com/larsch/ocra/)\
+[Install Ocra](https://github.com/larsch/ocra/)
 >gem install ocra
 
 ## License
