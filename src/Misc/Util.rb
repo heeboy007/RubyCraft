@@ -39,3 +39,11 @@ module Ascii_Code
   Greater = 62
   
 end
+
+module GameState
+  
+  Initial_Menu = 0
+  GamePlay = 1
+  Paused_Menu = 2
+  
+end

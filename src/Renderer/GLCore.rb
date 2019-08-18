@@ -5,16 +5,13 @@ include Gl
 include Glu
 
 require_relative "../Misc/Util.rb"
-#require_relative "Loaders\\VertexLoader.rb"
 require_relative "../Misc/TextureLoader.rb"
-#require_relative "Renderer\\CubeRenderer.rb"
 require_relative "MapRenderer.rb"
 require_relative "../World/MapManager.rb"
 require_relative "../Renderer/DebugRenderer.rb"
 
 module GLManager #this thing NEEDS to be module!
   include Debug_output
-  #include CubeRenderer
   
   def gl_init camera_data
     d_puts "GLManager : gl_init : glInit Start."

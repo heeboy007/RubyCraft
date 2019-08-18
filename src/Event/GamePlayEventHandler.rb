@@ -2,18 +2,27 @@ require "sfml/rbsfml"
 
 include SFML
 
-module EventHandler
+require_relative "../Misc/Util.rb"
+
+module GamePlayEventHandler
   
-  def handle_event
+  def inverse_command_state #on each call, turns the state of commanding.
+    @commandstr = ""
+    @is_player_commanding = !@is_player_commanding
+    @ui_manager.inverse_visiblity_of("Command")
+    @ui_manager.inverse_visiblity_of("CommandLine")
+  end
+  
+  def handle_gameplay_events
     while event = poll_event
       case event.type
         
       when Event::Closed
-        @is_program_running = false
+        post_end_program
         
       when Event::Resized
         @width, @height = event.width, event.height
-        UIBuilder.instance.ui_update_resize @width, @height
+        @ui_manager.resize_screen @width, @height
         self.gl_reshape @width, @height
         self.sfml_reshape
         
@@ -26,9 +35,9 @@ module EventHandler
           inverse_command_state() if event.unicode == Ascii_Code::Backspace && @commandstr.empty?
           #if it is backspace, erase the char at the end of the char.
           @commandstr = @commandstr[0..-2] if event.unicode == Ascii_Code::Backspace
-          UIBuilder.instance.commandstr = @commandstr
+          @ui_manager.send_command_str @commandstr
           if event.unicode == Ascii_Code::Escape
-            UIBuilder.instance.commandstr = ""
+            @ui_manager.send_command_str ""
             command(@commandstr)
             inverse_command_state()
           end
@@ -46,7 +55,9 @@ module EventHandler
               @camera.rotate_cam_by_key event.code
             end
           when Keyboard::Escape #exit
-            post_end_program
+            #menu will be added
+            self.mouse_cursor_visible= true
+            @game_state = GameState::Paused_Menu
           end
         else #when commanding. 
           inverse_command_state() if event.code == Keyboard::Escape

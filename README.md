@@ -6,10 +6,9 @@ The files won't execute properly if there is no ruby interpreter or no gitbash i
 When you try to execute, please check out the 'gemlist.txt' and see if there is anything missing from your computer.
 The core gem for this program is glu,opengl.
 
-Very important library for this game, called 'rbSFML' is used for this version.(It's not a gem!)
-
-It's recommended to build, install the library by your own.
-But since it's a quite tricky library to build, and time-consuming job, I posted the compiled library file.
+Very important library for this game, called 'rbSFML' is used for this game.(It's not a gem library!)
+It's recommended to build and install the library by your own.
+I've posted a pre-compiled library file at past commits, but i deleted since it's not recommened. 
 
 ## Dependencies
 
@@ -31,14 +30,14 @@ Warning! : Used mingw32-gcc-MSYS build, based on windows only!
 Cmake download site : https://cmake.org/download/
 'rbSFML' is kind of a wrapper library, that doesn't has the basic function.
 So what you would need is the sfml library, and it requires cmake to build one.
-(I used gui version of it for more accuracy.)
+(I used gui version of cmake for more accuracy.)
 
 2. Build Sfml
 SFML source download : https://www.sfml-dev.org/download.php
 Since 'rbSFML' is updated until 2.3.2 of sfml, it's recommended to use 2.3.2.
 If you don't know how to use cmake to build things, you should find it out by yourself.
 
-3. Install Git 
+3. Install Git
 Recommended to use option cmd prompt command + git prompt command.
 Git Download Link is above description.
 
@@ -53,20 +52,35 @@ After downloading rbSFML, you could follow the instuctions of the main page(http
 
 6. Run! If you did setup correctly, the program will start properly.
 
-7. Make an exe file.
+## About Program itself...
+Currently, chunk loadings and loading distance methods are working.
+And ray-tracing for block placement and removeal are implemented.
+
+We need a pause menu, and a initial menu.
+And frustrum culling for preformance.
+Also we need a map generator.
+
+Although i've made this through, I'm still using the deprecated opengl methods. 
+(Such as glRotatef or glTranslatef.)
+
+### Snapshot
+
+![Flat_Generation](https://user-images.githubusercontent.com/41155496/63218860-24edc080-c1a0-11e9-850a-64d09a70af1e.PNG)
+
+## Building Executable
 If you want a .exe file, there would be a OcraCmd.txt file to make your build.
 This command is used on Git Bash at /src.
 Make sure you have the latest ocra is installed in your bash.
-
-[Install Ocra](https://github.com/larsch/ocra/)
-
-8. Install Aptana Studio(Option)
-http://www.aptana.com/
-If you want better workspace, highly recommend. Not neccecary, though.
-
-## Notice!
-Now build commands are in OcraCmd.txt to actually make a portable .exe file.
 No other O/S than windows are supported yet.
+
+[Install Ocra](https://github.com/larsch/ocra/)\
+>gem install ocra
+
+## License
+This program is available as open source under the terms of BSD-3-Clause License.
+
+## Copyright
+Copyright(c) 2017 Kim Hi Su. See LICENSE for further details.
 
 <table border="1">
 </table>
