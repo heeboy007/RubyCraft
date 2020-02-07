@@ -25,7 +25,8 @@ Recommended setup is,\
 Incase you want to build the library by your own, here is some instructions.
 
 If you already have a build of sfml, you could just skip to number 3.\
-Warning! : Used mingw32-gcc-MSYS build, based on windows only!
+Warning! based on windows only!\
+Currently tested on mingw32-MSYS and mingw 64bit versions.\
 
 1. Install Cmake.
 Cmake download site : https://cmake.org/download/
