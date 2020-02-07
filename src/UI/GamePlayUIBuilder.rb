@@ -11,15 +11,13 @@ require_relative "GUIObjects/DebugInformation.rb"
 require_relative "FPSChecker.rb"
 require_relative "../World/MapManager.rb"
 
-class UIBuilder
+class GamePlayUIBuilder
   
   attr_reader :loaded_ui_objcets
-  attr_writer :commandstr
   attr_accessor :external_ui_updater
   
   def initialize
     @external_ui_updater = Array.new
-    @commandstr = ""
     @loaded_drawables = Array.new
     @textloader = TextureLoader.instance
     resbases = [

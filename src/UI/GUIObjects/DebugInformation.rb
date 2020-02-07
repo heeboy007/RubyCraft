@@ -17,7 +17,9 @@ class DebugInformation < DefaultUIobject
   end
   
   #override
-  def update width, height
+  def update param
+    width = param[0]
+    height = param[1]
     clock = FPS.instance
     if clock.query?
       @fps.string= "FPS : #{clock.fpscount}"

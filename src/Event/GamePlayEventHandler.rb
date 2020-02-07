@@ -33,9 +33,7 @@ module GamePlayEventHandler
           inverse_command_state() if event.unicode == Ascii_Code::Backspace && @commandstr.empty?
           #if it is backspace, erase the char at the end of the char.
           @commandstr = @commandstr[0..-2] if event.unicode == Ascii_Code::Backspace
-          @ui_manager.send_command_str @commandstr
           if event.unicode == Ascii_Code::Escape
-            @ui_manager.send_command_str ""
             command(@commandstr)
             inverse_command_state()
           end
@@ -53,8 +51,6 @@ module GamePlayEventHandler
               @camera.rotate_cam_by_key event.code
             end
           when Keyboard::Escape #exit
-            #menu will be added
-            self.mouse_cursor_visible= true
             @game_state = GameState::Paused_Menu
           end
         else #when commanding. 

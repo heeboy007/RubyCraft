@@ -38,7 +38,7 @@ class SuperWindow < RenderWindow
     @ui_manager = UIManager.new(@width, @height)
     self.ui_init
     
-    super((VideoMode.new @width, @height, 32), "RubyCraft #{config.version}", Style::Default, config.context)
+    super((VideoMode.new @width, @height, 32), "RubyCraft", Style::Default, config.context)
     self.vertical_sync_enabled= config.get_bool("vertical_sync_default_enabled")
     self.framerate_limit= config.get_int("max_framerate") #it has no meaning.
     self.gl_init @camera
@@ -49,11 +49,12 @@ class SuperWindow < RenderWindow
     commandline_updater = lambda do |obj|
       obj.string= @commandstr
     end
-    @ui_manager.add_ext_ui_updater(@ray_tracer.get_block_info_updater)
-    @ui_manager.add_ext_ui_updater(@player.get_player_info_updater)
-    @ui_manager.add_ext_ui_updater(@camera.get_camera_info_updater)
-    @ui_manager.add_ext_ui_updater(@camera.get_camera_graph_updater)
-    @ui_manager.add_ext_ui_updater(commandline_updater)
+    @ui_manager.add_ext_game_ui_updater(@ray_tracer.get_block_info_updater)
+    @ui_manager.add_ext_game_ui_updater(@player.get_player_info_updater)
+    @ui_manager.add_ext_game_ui_updater(@camera.get_camera_info_updater)
+    @ui_manager.add_ext_game_ui_updater(@camera.get_camera_graph_updater)
+    @ui_manager.add_ext_game_ui_updater(commandline_updater)
+    @ui_manager.add_ext_pause_ui_callback(lambda { post_end_program })
     @ui_manager.build_ui_objects
   end
   
@@ -80,7 +81,7 @@ class SuperWindow < RenderWindow
     while @is_program_running
       case @game_state
         
-      when GameState::GamePlay
+      when GameState::GamePlay # STATE : PLAY
         #fisrt, handle the events
         handle_gameplay_events #event handler
         @camera.update #calculations of cordinates
@@ -105,15 +106,16 @@ class SuperWindow < RenderWindow
         #I have to handle the newer gl states for my own, because SFML doesn't know it.
         
         if !@has_ui_globaly_disabled
-          @ui_manager.draw_ui_objects self, @width, @height
+          @ui_manager.draw_gameplay_ui self, @width, @height
         end
         
         self.pop_gl_states #sfml function : pop gl state from a stack so it would be displayed.
       
-      when GameState::Paused_Menu
+      when GameState::Paused_Menu # STATE : PAUSE
       
         handle_pausemenu_events
         self.clear_window
+        self.mouse_cursor_visible= true
         
         self.draw_3d_objs
         
@@ -123,10 +125,12 @@ class SuperWindow < RenderWindow
         #I have to handle the newer gl states for my own, because SFML doesn't know it.
           
         if !@has_ui_globaly_disabled
-          @ui_manager.draw_ui_objects self, @width, @height, false
+          @ui_manager.draw_gameplay_ui self, @width, @height
         end
 
-        
+        mouse_state = [Mouse.get_position([self]).x, Mouse.get_position([self]).y,
+          Mouse.button_pressed?(Mouse::Left)]
+        @ui_manager.draw_pause_menu_ui self, @width, @height, mouse_state
         
         self.pop_gl_states
       

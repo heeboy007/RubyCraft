@@ -10,7 +10,9 @@ class CommandLine < DefaultUIobject
   end
   
   #override
-  def update width, height
+  def update param
+    width = param[0]
+    height = param[1]
     @command_text.position= Vector2.new(7.0, height - 20.0)
     @command_text_updater.call @command_text
     @command_box.position= Vector2.new(5.0, height - 23.0)

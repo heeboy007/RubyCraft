@@ -26,8 +26,8 @@ module PauseMenuEventHandler
         end
       
       when Event::MouseButtonPressed
-        post_end_program
-      
+        #post_end_program
+        #event.x , event.y needed to process button events
       end
     end #while event = poll_event
   end
