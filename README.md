@@ -69,8 +69,8 @@ Although i've made this through, I'm still using the deprecated opengl methods.\
 ![Flat_Generation](https://user-images.githubusercontent.com/41155496/63218860-24edc080-c1a0-11e9-850a-64d09a70af1e.PNG)
 
 ## Building Executable
-If you want a .exe file, there would be a OcraCmd.txt file to make your build.\
-This command is used on Git Bash at /src.\
+If you want a .exe file, necessary commands can be found on "OcraCmd.txt".\
+Use the command on Git Bash at /src.\
 Make sure you have the latest ocra is installed in your bash.\
 No other O/S than windows are supported yet.
 
