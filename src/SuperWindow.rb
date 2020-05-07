@@ -13,6 +13,7 @@ require_relative "Renderer/Camera.rb"
 
 require_relative "Event/GamePlayEventHandler.rb"
 require_relative "Event/PauseMenuEventHandler.rb"
+require_relative "Event/InitialMenuEventHandler.rb"
 
 require_relative "Maths/RayTracer.rb"
 
@@ -24,37 +25,45 @@ class SuperWindow < RenderWindow
   include Command
   include GamePlayEventHandler
   include PauseMenuEventHandler
+  include InitialMenuEventHandler
   
   def initialize
     config = ConfigLoader.instance
     @width, @height = config.get_int("width"), config.get_int("height")
     @is_program_running, @has_ui_globaly_disabled, @is_player_commanding, @is_window_being_focused = true, config.get_bool("ui_disabled"), false, false
-    @game_state = GameState::GamePlay
+    @game_state = GameState::Initial_Menu
+    @commandstr, @vsync = "", config.get_bool("vertical_sync_default_enabled")
+    
     @camera, @clock = Camera.instance, Clock.new
-    @commandstr = ""
-    @ray_tracer = RayTracer.new
-    @player = Player.new
-    
+    @ray_tracer, @player = RayTracer.new, Player.new
     @ui_manager = UIManager.new(@width, @height)
-    self.ui_init
     
-    super((VideoMode.new @width, @height, 32), "RubyCraft", Style::Default, config.context)
-    self.vertical_sync_enabled= config.get_bool("vertical_sync_default_enabled")
+    super((VideoMode.new @width, @height, 32), "RubyCraft #{config.get_string("build_ver")}", Style::Default, config.context)
     self.framerate_limit= config.get_int("max_framerate") #it has no meaning.
     self.gl_init @camera
+    self.ui_init
     self.check_gl_version
   end
   
   def ui_init
-    commandline_updater = lambda do |obj|
-      obj.string= @commandstr
-    end
-    @ui_manager.add_ext_game_ui_updater(@ray_tracer.get_block_info_updater)
-    @ui_manager.add_ext_game_ui_updater(@player.get_player_info_updater)
-    @ui_manager.add_ext_game_ui_updater(@camera.get_camera_info_updater)
-    @ui_manager.add_ext_game_ui_updater(@camera.get_camera_graph_updater)
-    @ui_manager.add_ext_game_ui_updater(commandline_updater)
-    @ui_manager.add_ext_pause_ui_callback(lambda { post_end_program })
+    @ui_manager.add_ui_updater(GameState::GamePlay, @ray_tracer.get_block_info_updater)
+    @ui_manager.add_ui_updater(GameState::GamePlay, @player.get_player_info_updater)
+    @ui_manager.add_ui_updater(GameState::GamePlay, @camera.get_camera_info_updater)
+    @ui_manager.add_ui_updater(GameState::GamePlay, @camera.get_camera_graph_updater)
+    @ui_manager.add_ui_updater(GameState::GamePlay, lambda { |obj| obj.string= @commandstr })
+    @ui_manager.add_ui_updater(GameState::Paused_Menu, lambda { |text| post_end_program })
+    @ui_manager.add_ui_updater(GameState::Paused_Menu, lambda { |text| quit_title_screen })
+    @ui_manager.add_ui_updater(GameState::Paused_Menu, @map_manager.get_render_dist_updater)
+    @ui_manager.add_ui_updater(GameState::Paused_Menu,
+    lambda do |text|
+      @vsync = !@vsync
+      text.string= "VSync : On" if @vsync
+      text.string= "VSync : Off" if !@vsync
+      self.vertical_sync_enabled= @vsync
+    end)
+    @ui_manager.add_ui_updater(GameState::Initial_Menu, lambda { |text| enter_gameplay})
+    @ui_manager.add_ui_updater(GameState::Initial_Menu, lambda { |text| post_end_program })
+    
     @ui_manager.build_ui_objects
   end
   
@@ -74,12 +83,33 @@ class SuperWindow < RenderWindow
     @is_program_running = false
   end
   
+  def enter_gameplay
+    @game_state = GameState::GamePlay
+  end
+  
+  def quit_title_screen
+    @game_state = GameState::Initial_Menu
+  end
+  
   def run
     #fpscount = 0
     @camera.set_position_by 0.5, 3, 0.5
     @camera.set_rotate_angle false, 180
     while @is_program_running
       case @game_state
+        
+      when GameState::Initial_Menu #STATE : INIT
+        handle_initialmenu_events #event handler
+        self.clear_window
+        self.mouse_cursor_visible= true
+        
+        self.push_gl_states
+        
+        mouse_state = [Mouse.get_position([self]).x, Mouse.get_position([self]).y,
+          Mouse.button_pressed?(Mouse::Left)]
+        @ui_manager.draw_ui(GameState::Initial_Menu, self, @width, @height, mouse_state)
+        
+        self.pop_gl_states
         
       when GameState::GamePlay # STATE : PLAY
         #fisrt, handle the events
@@ -95,7 +125,7 @@ class SuperWindow < RenderWindow
           pos = [Vector2.new((@width/2).to_i, (@height/2).to_i), self]
           Mouse.set_position(pos)
         end
-        #needs raytrace to be done after all cordinate moves. And helpfully, return some useful display infos!
+        #raytrace needs to be done after all cord translations.
         @ray_tracer.ray_trace(@camera.pos, @camera.pitch, @camera.yaw)
         
         self.draw_3d_objs #draw 3D stuffs.
@@ -103,10 +133,10 @@ class SuperWindow < RenderWindow
         self.push_gl_states #sfml function : push gl states so it would be cleared.
         
         #According to sfml main forum, if I use over 2.0+ opengl,
-        #I have to handle the newer gl states for my own, because SFML doesn't know it.
+        #I have to handle newer gl states for my own, because SFML doesn't know it.
         
         if !@has_ui_globaly_disabled
-          @ui_manager.draw_gameplay_ui self, @width, @height
+          @ui_manager.draw_ui(GameState::GamePlay, self, @width, @height)
         end
         
         self.pop_gl_states #sfml function : pop gl state from a stack so it would be displayed.
@@ -122,15 +152,16 @@ class SuperWindow < RenderWindow
         self.push_gl_states #sfml function : push gl states so it would be cleared.
           
         #According to sfml main forum, if I use over 2.0+ opengl,
-        #I have to handle the newer gl states for my own, because SFML doesn't know it.
+        #I have to handle newer gl states for my own, because SFML doesn't know it.
           
         if !@has_ui_globaly_disabled
-          @ui_manager.draw_gameplay_ui self, @width, @height
+          @ui_manager.draw_ui(GameState::GamePlay, self, @width, @height)
+          #puts "main #{@width}, #{@height}"
         end
 
         mouse_state = [Mouse.get_position([self]).x, Mouse.get_position([self]).y,
           Mouse.button_pressed?(Mouse::Left)]
-        @ui_manager.draw_pause_menu_ui self, @width, @height, mouse_state
+        @ui_manager.draw_ui GameState::Paused_Menu, self, @width, @height, mouse_state
         
         self.pop_gl_states
       

@@ -9,7 +9,7 @@ module GamePlayEventHandler
   def inverse_command_state #on each call, turns the state of commanding.
     @commandstr = ""
     @is_player_commanding = !@is_player_commanding
-    @ui_manager.inverse_visiblity_of("Command")
+    @ui_manager.inverse_visiblity_of(GameState::GamePlay, "Command")
   end
   
   def handle_gameplay_events
@@ -44,7 +44,10 @@ module GamePlayEventHandler
           case event.code
           when Keyboard::F1 #if F1 is pressed, make all ui invisible.
             @has_ui_globaly_disabled = !@has_ui_globaly_disabled
-          when Keyboard::F3 #if F3 is pressed, force to update every chunk.
+          when Keyboard::F3 #if F3 is pressed, show up debug infos.
+            @ui_manager.inverse_visiblity_of(GameState::GamePlay, "Debug")
+            @ui_manager.inverse_visiblity_of(GameState::GamePlay, "VectorView")
+          when Keyboard::F12 #if F12 is pressed, force to update every chunk.
             MapManager.instance.force_update_every_chunk
           when Keyboard::Up, Keyboard::Left, Keyboard::Down, Keyboard::Right #rotate camera
             if !@is_player_commanding && @is_window_being_focused

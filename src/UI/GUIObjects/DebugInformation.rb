@@ -3,8 +3,8 @@ require_relative "../FPSChecker.rb"
 
 class DebugInformation < DefaultUIobject
   
-  def initialize label, fps, playerinfo, raytraceblock, mapinfo, playerinvinfo, player_updater, raytrace_updater, map_updater, playerinv_updater
-    super(nil, label, nil, true)
+  def initialize label, fps, playerinfo, raytraceblock, mapinfo, playerinvinfo, player_updater, raytrace_updater, map_updater, playerinv_updater, show
+    super(nil, label, nil, show)
     @fps = fps
     @playerinfo = playerinfo
     @raytraceblock = raytraceblock

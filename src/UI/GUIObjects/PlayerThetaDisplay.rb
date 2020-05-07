@@ -2,8 +2,8 @@ require_relative "DefaultUIobject.rb"
 
 class PlayerThetaDisplay < DefaultUIobject
   
-  def initialize label, graph, graph_point, point_updater
-    super(nil, label, nil, true)
+  def initialize label, graph, graph_point, point_updater, show
+    super(nil, label, nil, show)
     @graph = graph
     @graph_point = graph_point
     @point_updater = point_updater

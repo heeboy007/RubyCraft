@@ -19,6 +19,8 @@ class MapManager
     @cooldown_checker = CooldownChecker.new
     @called = 0
     
+    @chuck_load_distance = Util::Chunk_Size * ConfigLoader.instance.get_int("chunk_load_distance")
+    
     #now.... only the generation code remains....
     generate_map_by_seed 0
   end
@@ -160,8 +162,17 @@ class MapManager
     cy = ky.to_i * Util::Chunk_Size + Util::Chunk_Size / 2
     cz = kz.to_i * Util::Chunk_Size + Util::Chunk_Size / 2
     dist = Math.sqrt((pos_x - cx)**2 + (pos_y - cy)**2 + (pos_z - cz)**2)
-    return true if dist < Util::Chunk_Size * ConfigLoader.instance.get_int("chunk_load_distance")
+    return true if dist < @chuck_load_distance
     return false
+  end
+  
+  def get_render_dist_updater
+    updater = lambda do |text, progress|
+      load = (5 + progress * 5).floor
+      text.string= "Render Dist : #{(5 + progress * 5).floor}"
+      @chuck_load_distance = Util::Chunk_Size * load
+    end
+    return updater
   end
   
   #called by command or keyboard f3 by eventhandler.

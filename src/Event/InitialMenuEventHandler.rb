@@ -4,9 +4,9 @@ include SFML
 
 require_relative "../Misc/Util.rb"
 
-module PauseMenuEventHandler
+module InitialMenuEventHandler
   
-  def handle_pausemenu_events
+  def handle_initialmenu_events
     while event = poll_event
       case event.type
         
@@ -17,13 +17,6 @@ module PauseMenuEventHandler
         @width, @height = event.width, event.height
         self.gl_reshape @width, @height
         self.sfml_reshape
-      
-      when Event::KeyPressed
-        case event.code
-        when Keyboard::Escape
-          #switch back to normal game play.
-          @game_state = GameState::GamePlay
-        end
       
       when Event::MouseButtonPressed
         #nothing to do here really.

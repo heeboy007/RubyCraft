@@ -4,7 +4,7 @@ require "glu"
 include Gl
 include Glu
 
-require_relative "../Misc/Util.rb"
+require_relative "../Misc/ConfigLoader.rb"
 require_relative "../Misc/TextureLoader.rb"
 require_relative "MapRenderer.rb"
 require_relative "../World/MapManager.rb"
@@ -20,6 +20,7 @@ module GLManager #this thing NEEDS to be module!
     err_message "GLManager : gl_init : ResourceLoader or Player had a probelm" if camera_data == nil
     
     @camera_data = camera_data
+    @fov = ConfigLoader.instance.get_int("fov")
     
     glClearColor(0.3, 0.6, 1.0, 0)
     glClearDepth(1.0)
@@ -30,14 +31,13 @@ module GLManager #this thing NEEDS to be module!
     glDepthMask GL_TRUE
     glDepthFunc GL_LESS
     glShadeModel GL_SMOOTH
-    #glFrontFace GL_CCW
     
     glViewport(0, 0, @width, @height)
     
     glMatrixMode GL_PROJECTION
     glLoadIdentity
     
-    gluPerspective(Util::Pov, @width / @height, 0.1, 100.0)
+    gluPerspective(@fov, @width / @height, 0.1, 100.0)
      
     glMatrixMode GL_MODELVIEW
     glLoadIdentity
@@ -57,7 +57,7 @@ module GLManager #this thing NEEDS to be module!
     glMatrixMode GL_PROJECTION
     glLoadIdentity
     
-    gluPerspective(Util::Pov, aspect, 1.0, 100.0)
+    gluPerspective(@fov, aspect, 1.0, 100.0)
     
     glMatrixMode GL_MODELVIEW  
     
@@ -85,7 +85,7 @@ module GLManager #this thing NEEDS to be module!
   def update_camera
     #warning! This function calls are ORDERED!
     #if you don't have any idea what you're editing, don't do it!
-    reload_camera #TODO: Fix to make camera up right. very unefficient algorithm.
+    reload_camera #TODO: Fix to make camera up right. very inefficient algorithm.
     
     vec = @camera_data.get_camera_x_axis_vector
     glRotatef(@camera_data.xspin, vec.x, 0.0, vec.z) #X rotate

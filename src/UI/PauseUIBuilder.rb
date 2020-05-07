@@ -3,77 +3,65 @@ require 'singleton'
 
 include SFML
 
-require_relative "../Misc/TextureLoader.rb"
+require_relative "UIBuilder.rb"
 require_relative "../Misc/ConfigLoader.rb"
 require_relative "GUIObjects/DefaultUIObject.rb"
 require_relative "GUIObjects/InteractableUIobject.rb"
+require_relative "GUIObjects/DragBar.rb"
+require_relative "GUIObjects/ToggleButton.rb"
 
-class PauseUIBuilder
+class PauseUIBuilder < UIBuilder
   
-  attr_reader :loaded_ui_menu
+  attr_reader :loaded_ui_objects
   attr_accessor :external_ui_callbacks
   
   def initialize width, height
-    @loaded_ui_menu = Array.new
+    super("pause")
+    @loaded_ui_objects = Array.new
     @external_ui_callbacks = Array.new
-    @textloader = TextureLoader.instance
     @resbases = [
       ["sprite", "button", false, 256, 64],
-      ["text", "Resource\\arial.ttf", "ArialText", 10],
-      ["text", "Resource\\AdineKirnberg-Script.ttf", "AdineText", 50],
-      ["rect", width.to_f, height.to_f, 0, 0, 0, 75]
+      ["text", "Resource\\arial.ttf", "ArialText", 30],
+      ["rect", width.to_f, height.to_f, 0, 0, 0, 75],
+      ["sprite", "drager", false, 64, 64]
     ]
-  end
-  
-  def maketext info, initial_text = nil
-    obj_font = Font.new
-    obj_font.load_from_file info[1]
-    if initial_text == nil
-      obj = Text.new(info[2], obj_font, info[3]) 
-    else
-      obj = Text.new(initial_text, obj_font, info[3])
-    end
-    return obj
-  end
-  
-  def makesprite info
-    texture = @textloader.get_texture(info[1])
-    texture.smooth= info[2]
-    obj = Sprite.new
-    obj.set_texture texture
-    obj.texture_rect= Rect.new(0, 0, info[3], info[4])
-    return obj
-  end
-  
-  def makerect info
-    obj = RectangleShape.new(Vector2.new(info[1], info[2]))
-    obj.fill_color= Color.new(info[3], info[4], info[5], info[6])
-    return obj
   end
   
   def build_ui_objects
     
     #background
-    @loaded_ui_menu << DefaultUIobject.new(makerect(@resbases[3]), "Background", 
+    @loaded_ui_objects << DefaultUIobject.new(makerect(@resbases[2]), "Background", 
     lambda do |obj, width, height|
       obj.size= Vector2.new(width.to_f, height.to_f)
     end)
     
     #version....
-    @loaded_ui_menu << DefaultUIobject.new(maketext(@resbases[2], ConfigLoader.instance.version), "VersionInfo",
+    @loaded_ui_objects << DefaultUIobject.new(maketext(@resbases[1], ConfigLoader.instance.version), "VersionInfo",
     lambda do |obj, width, height|
-      obj.position= Vector2.new(width.to_f - obj.local_bounds.width - 2, height.to_f - obj.local_bounds.height + 29)
+      obj.position= Vector2.new(0.0, 0.0)
     end)
     
     #pause...
-    @loaded_ui_menu << DefaultUIobject.new(maketext(@resbases[2], "Pause"), "PauseText",
+    @loaded_ui_objects << DefaultUIobject.new(maketext(@resbases[1], "Pause"), "PauseText",
     lambda do |obj, width, height|
       obj.position= Vector2.new((width.to_f - obj.local_bounds.width)/2, (height.to_f - obj.local_bounds.height)/10)
     end)
     
-    #tester
-    @loaded_ui_menu << InteractableUIobject.new([makesprite(@resbases[0]), maketext(@resbases[2],"Quit")], 
-      "BoxTest", Rect.new(0.36, 0.28, 0.28, 0.12), @external_ui_callbacks[0])
+    #quit
+    @loaded_ui_objects << InteractableUIobject.new([makesprite(@resbases[3]), maketext(@resbases[1],"Quit")], 
+      "Init_St_Button", Rect.new(0.30, 0.32, 0.40, 0.08), @external_ui_callbacks[0])
+    
+    #title
+    @loaded_ui_objects << InteractableUIobject.new([makesprite(@resbases[3]), maketext(@resbases[1],"To Title Screen")], 
+      "Init_St_Button", Rect.new(0.30, 0.42, 0.40, 0.08), @external_ui_callbacks[1])
+     
+    #Vsync.
+    @loaded_ui_objects << ToggleButton.new([makesprite(@resbases[3]), maketext(@resbases[1],"VSync : On")], 
+      "VSync", Rect.new(0.30, 0.62, 0.40, 0.08), nil, @external_ui_callbacks[3])
+    
+    #dragbar
+    @loaded_ui_objects << DragBar.new([makesprite(@resbases[0]), maketext(@resbases[1],"Render Dist :"), makesprite(@resbases[3])], 
+      "Chunk_Dist", Rect.new(0.30, 0.72, 0.40, 0.08), @external_ui_callbacks[2])
     
     return nil
   end

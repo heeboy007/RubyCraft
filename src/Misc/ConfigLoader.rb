@@ -27,6 +27,17 @@ class ConfigLoader
     d_puts "Loaded : major_version : #{@context.major_version}"
     d_puts "Loaded : minor_version : #{@context.minor_version}"
     d_puts "Loaded : Current Version : #{@version}"
+    
+    #Override
+    if !ARGV.empty?
+      ARGV.each do |args|
+        sp = args.split("=")
+        if @values.key?(sp[0])
+          d_puts "Manual Argument Override By #{sp[0]} = #{sp[1]}"
+          @values[sp[0]] = sp[1]
+        end
+      end
+    end
   end
 
   def get_int key
@@ -38,7 +49,23 @@ class ConfigLoader
   end
   
   def get_bool key
-    return @values[key].downcase == "true"
+    return @values[key].downcase.chomp.eql?("true")
+  end
+  
+  def set_int key, value
+    @values[key] = value.to_i
+    return nil
+  end
+  
+  def set_string key, value
+    @values[key] = value.to_s
+    return nil
+  end
+  
+  def set_bool key, value
+    value = !(value == nil || value == false)
+    @values[key] = value
+    return nil
   end
 
 end

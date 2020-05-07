@@ -13,10 +13,11 @@ class TextureLoader
   def initialize
     @basicdir = "Resource/Texture/"
     @names = [
-      ["texture_0.png","img"],
+      ["texture_0.png","img"], #imgs are for 3d drawing only...
       ["aim.png","tex"],
       ["graph.png","tex"],
-      ["button.png","tex"]
+      ["button.png","tex"],
+      ["drager.png","tex"]
     ]
     @textures = Hash.new
     

@@ -2,15 +2,15 @@ require_relative "DefaultUIobject.rb"
 require_relative "../../Maths/General_Maths.rb"
 
 #Also serves a roll of buttons...
-class InteractableUIobject < DefaultUIobject
+class ToggleButton < InteractableUIobject
   include General_Maths
   
-  def initialize drawable, label, rect, listener
-    @box, @text = drawable
-    @box_default_width, @box_default_height = @box.local_bounds.width, @box.local_bounds.height
-    super(@box, label, nil, true)
-    @rect = rect #rect must be normalized
-    @update_listener = listener
+  def initialize drawable, label, rect, const_update, when_toggled
+    super(drawable, label, rect, const_update)
+    @const_update = const_update
+    @when_toggled = when_toggled
+    @prev_press = false
+    @when_toggled.call(@text) if (@when_toggled != nil)
   end
   
   #override
@@ -33,15 +33,13 @@ class InteractableUIobject < DefaultUIobject
       if pressed
         @box.rotation= 180.0
         @box.position= Vector2.new(pixel_left + pixel_width, pixel_top + pixel_height)
-        @update_listener.call(@text) if (@update_listener != nil)
+        @const_update.call(@text, pressed) if (@const_update != nil)
+        if !@prev_press
+          @when_toggled.call(@text) if (@when_toggled != nil)
+        end
       end
+      @prev_press = pressed
     end
-  end
-  
-  #override
-  def draw_on window
-    window.draw @box
-    window.draw @text
   end
   
 end
