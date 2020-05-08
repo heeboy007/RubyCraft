@@ -25,7 +25,7 @@ class Camera
   end
   
   def check
-    smallnum = 0.00001
+    smallnum = 0.005
     speed_limit = 10.0
     
     #speed limit
@@ -36,7 +36,7 @@ class Camera
     @speed.z= -speed_limit if @speed.z < -speed_limit
     @speed.z = speed_limit if @speed.z > speed_limit
     
-    #if speed is to small, stop calculate.
+    #if speed is too small, stop calculate.
     @speed.x= 0.0 if -smallnum < @speed.x && @speed.x < smallnum
     @speed.y= 0.0 if -smallnum < @speed.y && @speed.y < smallnum
     @speed.z= 0.0 if -smallnum < @speed.z && @speed.z < smallnum
@@ -60,14 +60,16 @@ class Camera
 
   def update #called constantly by main thread.
     #@speed.y -= 0.1 if @is_gravity_enabled
-    @speed.x *= 0.65
-    @speed.y *= 0.65
-    @speed.z *= 0.65
+    #updated physics a little, applied air drag.
+    @speed.x -= @speed.x * @speed.x.abs * 0.25
+    @speed.y -= @speed.y * @speed.y.abs * 0.25
+    @speed.z -= @speed.z * @speed.z.abs * 0.25
+    @speed *= 0.8
+    
     @xspin *= 0.70
     @yspin *= 0.70
+    
     @pos += @speed
-    
-    
     @pitch += @xspin
     @yaw += @yspin
     self.check
@@ -145,10 +147,10 @@ class Camera
   
   def get_camera_info_updater #called by UIs in main thread.
     updater = lambda do |obj| #keep update the camerainfo
-      obj.string= "X : #{@pos.x}, Y : #{@pos.y}, Z : #{@pos.z}\n" +
-      "SX : #{@speed.x}, SY : #{@speed.y}, SZ : #{@speed.z}\n" +
-      "Pitch : #{@pitch}, Yaw : #{@yaw}\n" +
-      "TS : #{@xspin}, PS : #{@yspin}"
+      obj.string= "X : #{@pos.x.ceil}, Y : #{@pos.y.ceil}, Z : #{@pos.z.ceil}\n" +
+      "SX : #{@speed.x.ceil}, SY : #{@speed.y.ceil}, SZ : #{@speed.z.ceil}\n" +
+      "Pitch : #{@pitch.ceil}, Yaw : #{@yaw.ceil}\n" +
+      "TS : #{@xspin.ceil}, PS : #{@yspin.ceil}"
     end
     
     return updater

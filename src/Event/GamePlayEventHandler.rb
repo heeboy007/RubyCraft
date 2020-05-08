@@ -2,18 +2,25 @@ require "sfml/rbsfml"
 
 include SFML
 
-module EventHandler
+require_relative "../Misc/Util.rb"
+
+module GamePlayEventHandler
   
-  def handle_event
+  def inverse_command_state #on each call, turns the state of commanding.
+    @commandstr = ""
+    @is_player_commanding = !@is_player_commanding
+    @ui_manager.inverse_visiblity_of(GameState::GamePlay, "Command")
+  end
+  
+  def handle_gameplay_events
     while event = poll_event
       case event.type
         
       when Event::Closed
-        @is_program_running = false
+        post_end_program
         
       when Event::Resized
         @width, @height = event.width, event.height
-        UIBuilder.instance.ui_update_resize @width, @height
         self.gl_reshape @width, @height
         self.sfml_reshape
         
@@ -26,9 +33,7 @@ module EventHandler
           inverse_command_state() if event.unicode == Ascii_Code::Backspace && @commandstr.empty?
           #if it is backspace, erase the char at the end of the char.
           @commandstr = @commandstr[0..-2] if event.unicode == Ascii_Code::Backspace
-          UIBuilder.instance.commandstr = @commandstr
           if event.unicode == Ascii_Code::Escape
-            UIBuilder.instance.commandstr = ""
             command(@commandstr)
             inverse_command_state()
           end
@@ -39,14 +44,17 @@ module EventHandler
           case event.code
           when Keyboard::F1 #if F1 is pressed, make all ui invisible.
             @has_ui_globaly_disabled = !@has_ui_globaly_disabled
-          when Keyboard::F3 #if F3 is pressed, force to update every chunk.
+          when Keyboard::F3 #if F3 is pressed, show up debug infos.
+            @ui_manager.inverse_visiblity_of(GameState::GamePlay, "Debug")
+            @ui_manager.inverse_visiblity_of(GameState::GamePlay, "VectorView")
+          when Keyboard::F12 #if F12 is pressed, force to update every chunk.
             MapManager.instance.force_update_every_chunk
           when Keyboard::Up, Keyboard::Left, Keyboard::Down, Keyboard::Right #rotate camera
             if !@is_player_commanding && @is_window_being_focused
               @camera.rotate_cam_by_key event.code
             end
           when Keyboard::Escape #exit
-            post_end_program
+            @game_state = GameState::Paused_Menu
           end
         else #when commanding. 
           inverse_command_state() if event.code == Keyboard::Escape

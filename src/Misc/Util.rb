@@ -12,7 +12,7 @@ module Debug_output
   
   def err_message msg
     puts "ERROR : " + msg.to_s
-    self.postEndProgram
+    self.post_end_program
   end
   
 end
@@ -26,7 +26,6 @@ end
 module Util
   
   Chunk_Size = 8
-  Pov = 60
   Max_Range = 10
   Texture_Per_Image_Row = 2
   
@@ -37,5 +36,13 @@ module Ascii_Code
   Backspace = 8
   Escape = 13
   Greater = 62
+  
+end
+
+module GameState
+  
+  Initial_Menu = 0
+  GamePlay = 1
+  Paused_Menu = 2
   
 end

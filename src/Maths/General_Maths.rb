@@ -8,6 +8,13 @@ module General_Maths
     return sqrt((from_here.x - to_there.x)**2 + (from_here.y - to_there.y)**2 + (from_here.z - to_there.z)**2)
   end
   
+  def is_in_range? x, y, x_in_here, y_in_here
+    if x_in_here[0] <= x && x <= (x_in_here[0] + x_in_here[1]) && y_in_here[0] <= y && y <= (y_in_here[0] + y_in_here[1])
+      return true
+    end
+    return false
+  end
+  
 end
 
 class End_Point
