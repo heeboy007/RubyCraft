@@ -1,13 +1,13 @@
 # RubyCraft
-A Copy Of Minecraft... But not in c, c++, java, but in ruby! 
+A Copy Of Minecraft... But not in c, c++, java, but in ruby! \
 IDE by Aptana Studio.
 
-The files won't execute properly if there is no ruby interpreter or no gitbash installed.
+The files won't execute properly if there is no ruby interpreter or no gitbash installed.\
 When you try to execute, please check out the 'gemlist.txt' and see if there is anything missing from your computer.
 The core gem for this program is glu,opengl.
 
-Very important library for this game, called 'rbSFML' is used for this game.(It's not a gem library!)
-It's recommended to build and install the library by your own.
+Very important library for this game, called 'rbSFML' is used for this game.(It's not a gem library!)\
+It's recommended to build and install the library by your own.\
 I've posted a pre-compiled library file at past commits, but i deleted since it's not recommened. 
 
 ## Dependencies
@@ -26,7 +26,7 @@ Incase you want to build the library by your own, here is some instructions.
 
 If you already have a build of sfml, you could just skip to number 3.\
 Warning! based on windows only!\
-Currently tested on mingw32-MSYS and mingw 64bit versions.\
+Currently tested on mingw32-MSYS and mingw 64bit versions.
 
 1. Install Cmake.
 Cmake download site : https://cmake.org/download/
@@ -35,12 +35,12 @@ So what you would need is the sfml library, and it requires cmake to build one.\
 (I used gui version of cmake for more accuracy.)
 
 2. Build Sfml
-SFML source download : https://www.sfml-dev.org/download.php
-Since 'rbSFML' is updated until 2.3.2 of sfml, it's recommended to use 2.3.2.
+SFML source download : https://www.sfml-dev.org/download.php\
+Since 'rbSFML' is updated until 2.3.2 of sfml, it's recommended to use 2.3.2.\
 If you don't know how to use cmake to build things, you should find it out by yourself.
 
 3. Install Git
-Recommended to use option cmd prompt command + git prompt command.
+Recommended to use option cmd prompt command + git prompt command.\
 Git Download Link is above description.
 
 4. Install Ruby
@@ -56,9 +56,9 @@ After downloading rbSFML, you could follow the instuctions of the main page(http
 
 ## About Program itself...
 Currently, chunk loadings and loading distance methods are working.\
-And ray-tracing for block placement and removeal are implemented.
+And ray-tracing for block placement and removeal are implemented.\
+Added pause menu, and a initial menu.
 
-We need a pause menu, and a initial menu.\
 And frustrum culling for preformance.\
 Also we need a map generator.
 

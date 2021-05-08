@@ -1,12 +1,15 @@
+require "perlin"
+
 require_relative "../Renderer/MapRenderer.rb"
 require_relative "Chunk.rb"
+require_relative "Block.rb"
 require_relative "../Misc/Util.rb"
 require_relative "../Misc/CooldownChecker.rb"
 require_relative "../Misc/ConfigLoader.rb"
-require_relative "Block.rb"
 
 class MapManager
   include Singleton
+  include Debug_output
   
   attr_reader :map_renderer
   attr_accessor :update_queryed_chunks
@@ -21,28 +24,23 @@ class MapManager
     
     @chuck_load_distance = Util::Chunk_Size * ConfigLoader.instance.get_int("chunk_load_distance")
     
-    #now.... only the generation code remains....
-    generate_map_by_seed 0
+    seed = Random.new.rand(100000)
+    d_puts "MapManager : Seed #{seed}"
+    generate_map_by_seed seed
   end
   
   def generate_map_by_seed seed
     #flat map generation first.
-    gen_area_size = 8
+    block_range = Util::Chunk_Generate_Range * Util::Chunk_Size
+    gen = Perlin::Generator.new(seed, 1.0, 1)
     
-    gen_area_size.times do |t1| 
-      gen_area_size.times do |t2| 
-        chunk = Chunk.new t1, -1, t2
-        Util::Chunk_Size.times do |cordx|
-          Util::Chunk_Size.times do |cordz|
-            chunk.add_block_at cordx, 0, cordz, Block::BlockID::Gravel
-            chunk.add_block_at cordx, 1, cordz, Block::BlockID::Gravel
-            chunk.add_block_at cordx, 2, cordz, Block::BlockID::Gravel
-            chunk.add_block_at cordx, 3, cordz, Block::BlockID::Grass
-          end
-        end
-        @chunk_hash["#{t1}:-1:#{t2}"] = chunk
+    (Util::Chunk_Generate_Range*2).times do |cx| #chucks bigger cord 
+      (Util::Chunk_Generate_Range*2).times do |cz| 
+        chunk = Chunk.new(cx-Util::Chunk_Generate_Range, -1, cz-Util::Chunk_Generate_Range, 
+          gen, Block::BlockID::Grass, Block::BlockID::Dirt)
+        @chunk_hash["#{cx-Util::Chunk_Generate_Range}:-1:#{cz-Util::Chunk_Generate_Range}"] = chunk
       end
-    end 
+    end
     
   end
   
@@ -88,12 +86,12 @@ class MapManager
   #this method causes lag.
   def query_each_side_has_a_block x, y, z, do_update = false
     arr = Array.new(6, false)
-    arr[0] = get_block_at(x, y - 1, z) == nil
-    arr[1] = get_block_at(x, y, z - 1) == nil
-    arr[2] = get_block_at(x - 1, y, z) == nil
-    arr[3] = get_block_at(x + 1, y, z) == nil
-    arr[4] = get_block_at(x, y, z + 1) == nil
-    arr[5] = get_block_at(x, y + 1, z) == nil
+    arr[0] = get_block_at(x, y - 1, z) == nil #bottom
+    arr[1] = get_block_at(x, y, z - 1) == nil #sides
+    arr[2] = get_block_at(x - 1, y, z) == nil #sides
+    arr[3] = get_block_at(x + 1, y, z) == nil #sides
+    arr[4] = get_block_at(x, y, z + 1) == nil #sides
+    arr[5] = get_block_at(x, y + 1, z) == nil #top
     
     if do_update 
       chx = (x / Util::Chunk_Size).floor
@@ -119,7 +117,7 @@ class MapManager
       end
       
     end
-    
+
     #@called += 1
     #puts @called
     

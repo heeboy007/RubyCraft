@@ -11,7 +11,7 @@ class TextureLoader
   include Singleton
   
   def initialize
-    @basicdir = "Resource/Texture/"
+    @basedir = "src/Resource/Texture/"
     @names = [
       ["texture_0.png","img"], #imgs are for 3d drawing only...
       ["aim.png","tex"],
@@ -31,7 +31,7 @@ class TextureLoader
   end
   
   def load_texture_with_name name
-    dir = @basicdir.clone
+    dir = @basedir.clone
     dir.concat(name)
     texture = Texture.new
     texture.load_from_file dir
@@ -39,7 +39,7 @@ class TextureLoader
   end
   
   def load_image_with_name name
-    dir = @basicdir.clone
+    dir = @basedir.clone
     dir.concat(name)
     img = Image.new
     img.load_from_file dir

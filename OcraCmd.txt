@@ -11,4 +11,4 @@ ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll
 
 --Completed Command for now. Use this command to make exe.
 
-ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.0.exe --add-all-core --gem-full=opengl,glu --verbose Main.rb
+ocra --dll libgcc_s_dw2-1.dll --dll libstdc++-6.dll --dll sfml-audio-2.dll --dll sfml-graphics-2.dll --dll freetype6.dll --dll sfml-window-2.dll --dll sfml-network-2.dll --dll sfml-system-2.dll --output RubyCraftbeta.1.0.0.exe --add-all-core --gem-full=opengl,glu,perlin --verbose Main.rb

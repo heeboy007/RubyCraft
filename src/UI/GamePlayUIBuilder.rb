@@ -4,11 +4,13 @@ require 'singleton'
 include SFML
 
 require_relative "UIBuilder.rb"
+require_relative "FPSChecker.rb"
+
 require_relative "GUIObjects/DefaultUIobject.rb"
 require_relative "GUIObjects/CommandLine.rb"
 require_relative "GUIObjects/PlayerThetaDisplay.rb"
 require_relative "GUIObjects/DebugInformation.rb"
-require_relative "FPSChecker.rb"
+
 require_relative "../World/MapManager.rb"
 require_relative "../Misc/ConfigLoader.rb"
 
@@ -23,16 +25,16 @@ class GamePlayUIBuilder < UIBuilder
     @external_ui_callbacks = Array.new
     @loaded_drawables = Array.new
     resbases = [
-      ["text", "Resource\\arial.ttf", "FPS : 0", 15],
-      ["text", "Resource\\arial.ttf", "PlayerInfo", 15],
+      ["text", "src\\Resource\\arial.ttf", "FPS : 0", 15],
+      ["text", "src\\Resource\\arial.ttf", "PlayerInfo", 15],
       ["sprite", "aim", false, 32, 32],
       ["circle", "graph", true, 50.0, 200, 200],
       ["rect", 50.0, 1.0, 0, 200, 50, 255],
       ["rect", 630.0, 18.0, 0, 0, 0, 128],
-      ["text", "Resource\\arial.ttf", "Command", 10],
-      ["text", "Resource\\arial.ttf", "RayTracedBlock", 10],
-      ["text", "Resource\\arial.ttf", "MapInfo", 10],
-      ["text", "Resource\\arial.ttf", "PlayerInventory", 10]
+      ["text", "src\\Resource\\arial.ttf", "Command", 10],
+      ["text", "src\\Resource\\arial.ttf", "RayTracedBlock", 10],
+      ["text", "src\\Resource\\arial.ttf", "MapInfo", 10],
+      ["text", "src\\Resource\\arial.ttf", "PlayerInventory", 10]
     ]
     resbases.each do |info|
       case info.first

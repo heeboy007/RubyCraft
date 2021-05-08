@@ -5,6 +5,7 @@ class Player
   def initialize
     
     #maybe add hunger and hp to here?....
+    @hp = 0
     @inventory = [
       [Block::BlockID::Gravel, Float::INFINITY], [Block::BlockID::Red_Chiseled_Sand_Stone, Float::INFINITY], 
       [Block::BlockID::Grass, Float::INFINITY], [Block::BlockID::Sand, Float::INFINITY],

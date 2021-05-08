@@ -21,7 +21,7 @@ class PauseUIBuilder < UIBuilder
     @external_ui_callbacks = Array.new
     @resbases = [
       ["sprite", "button", false, 256, 64],
-      ["text", "Resource\\arial.ttf", "ArialText", 30],
+      ["text", "src\\Resource\\arial.ttf", "ArialText", 30],
       ["rect", width.to_f, height.to_f, 0, 0, 0, 75],
       ["sprite", "drager", false, 64, 64]
     ]

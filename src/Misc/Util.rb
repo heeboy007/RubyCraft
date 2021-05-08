@@ -26,8 +26,9 @@ end
 module Util
   
   Chunk_Size = 8
+  Chunk_Generate_Range = 8
   Max_Range = 10
-  Texture_Per_Image_Row = 2
+  Texture_Per_Image_Row = 8.0
   
 end
 

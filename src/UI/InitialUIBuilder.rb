@@ -19,8 +19,8 @@ class InitialUIBuilder < UIBuilder
     @external_ui_callbacks = Array.new
     @resbases = [
       ["sprite", "drager", false, 64, 64],
-      ["text", "Resource\\arial.ttf", "ArialText", 32],
-      ["text", "Resource\\AdineKirnberg-Script.ttf", "AdineText", 72],
+      ["text", "src\\Resource\\arial.ttf", "ArialText", 32],
+      ["text", "src\\Resource\\AdineKirnberg-Script.ttf", "AdineText", 72],
       ["rect", width.to_f, height.to_f, 0, 216, 255, 255]
     ]
   end
