@@ -10,12 +10,24 @@ class Chunk
   attr_writer :flag_chunk_update
   attr_accessor :chunkmap
   
-  def initialize x, y, z
+  def initialize cx, cy, cz, gen = nil, top_block = nil, bottom_block = nil
     @chunkmap = Array.new(Util::Chunk_Size**3)
     @loaded_vertex = nil
     @loaded_tex_cord = nil
     @flag_chunk_update = true
-    @cx, @cy, @cz = x, y, z
+    @cx, @cy, @cz = cx, cy, cz
+    if gen != nil
+      Util::Chunk_Size.times do |x| #chucks bigger cord 
+        Util::Chunk_Size.times do |z|
+          height = gen[(@cx * Util::Chunk_Size + x)*0.01, (@cz * Util::Chunk_Size + z)*0.01]
+          finy = ((height + 1) * 3.9).floor
+          finy.times do |y|
+            @chunkmap[(z*(Util::Chunk_Size**2) + y*Util::Chunk_Size + x)] = Block.new(bottom_block, nil)
+          end
+          @chunkmap[(z*(Util::Chunk_Size**2) + finy*Util::Chunk_Size + x)] = Block.new(top_block, nil)
+        end
+      end 
+    end
   end
   
   def get_block_at x, y, z
@@ -52,13 +64,15 @@ class Chunk
           cordy = @cy * Util::Chunk_Size + ((index % (Util::Chunk_Size**2)) / Util::Chunk_Size).floor
           cordz = @cz * Util::Chunk_Size + (index / (Util::Chunk_Size**2)).floor
           #for each block, make a gl vertex and store in a single array.
-          vtxloader.get_vertex_with_cord(cordx, cordy, cordz, 
-          MapManager.instance.query_each_side_has_a_block(cordx, cordy, cordz)).each do |side_vtx|
+          adjacent_blocks = MapManager.instance.query_each_side_has_a_block(cordx, cordy, cordz)
+          #this function returns a Hash like this:
+          #{ 0 => [vertex_of_bottom_side], 1=> [somwhat side_vertex...], ... }
+          vtxloader.get_vertex_with_cord(cordx, cordy, cordz, adjacent_blocks).each_pair do |which_side, one_side_vtx|
             #vertex for each side is in side_vtx(Array). So we need to access the elements of it to make vbo in a single array.
-            side_vtx.each { |vtx| @loaded_vertex << vtx }
+            one_side_vtx.each { |vtx| @loaded_vertex << vtx }
             #make texture cord with it! using texture atlas method...
             #generate texture per side.
-            vtxloader.get_texture_vtx_by_id(block.id).each { |texture_cord| @loaded_tex_cord << texture_cord }
+            vtxloader.get_texture_vtx_by_id(block.id, which_side).each { |texture_cord| @loaded_tex_cord << texture_cord }
           end
         end
       end

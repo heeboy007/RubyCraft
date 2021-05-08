@@ -9,6 +9,9 @@ class Block
     Red_Chiseled_Sand_Stone = 1
     Grass = 2
     Sand = 3
+    Barrier = 4
+    Wood_Log = 5
+    Dirt = 6
   end
   
   def initialize id, block_tag
