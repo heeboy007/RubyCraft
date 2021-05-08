@@ -12,7 +12,7 @@ class ConfigLoader
   
   def initialize
     @values = Hash.new
-    File.readlines("src\\Resource\\config.txt").each do |line|
+    File.readlines("Resource\\config.txt").each do |line|
       @values[line.split('=')[0]] = line.split('=')[1]
     end
     

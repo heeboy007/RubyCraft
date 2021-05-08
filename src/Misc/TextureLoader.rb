@@ -11,7 +11,7 @@ class TextureLoader
   include Singleton
   
   def initialize
-    @basedir = "src/Resource/Texture/"
+    @basedir = "Resource/Texture/"
     @names = [
       ["texture_0.png","img"], #imgs are for 3d drawing only...
       ["aim.png","tex"],
